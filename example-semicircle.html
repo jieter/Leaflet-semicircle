@@ -14,21 +14,21 @@
 	<script>
 		var map = L.map('map');
 
-		var r;
+		var rot;
 		for(var i=1; i <=16; i++){
-			for(var j=1; j<=8; j++){
-				r = j*100;
-				L.circle([50.70-(j*0.02), -0.18 + i*0.02], r, {
+			for(var j=1; j<=12; j++){
+				rot = j * 60;
+				L.circle([50.70-(j*0.02), -0.18 + i*0.02], 500, {
 					color: '#f03',
 					opacity: 0.7,
 					weight: 2,
-					startAngle: 15 * i,
-					stopAngle: 360 - (15 * i)
+					startAngle: rot + 15 * i,
+					stopAngle: rot + 360 - (15 * i)
 				}).addTo(map);
 			}
 		}
 
-		map.setView([50.60, -0.0], 12);
+		map.setView([50.60, -0.0], 11);
 
 		var cloudmade = L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
