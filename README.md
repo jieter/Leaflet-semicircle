@@ -16,4 +16,4 @@ L.circle([51.5, -0.09], 500, {
 
 
 # Screenshot:
-![Semicircles screenshot](screenshot.png)
+![Semicircles screenshot](https://raw.github.com/jieter/Leaflet-semicircle/master/screenshot.png)
