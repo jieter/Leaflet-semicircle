@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Semicircle example</title>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
+	<script src="Semicircle.js"></script>
+
+</head>
+<body>
+	<div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
+
+	<script>
+		var map = L.map('map');
+
+		var r;
+		for(var i=1; i <=16; i++){
+			for(var j=1; j<=8; j++){
+				r = j*100;
+				L.circle([50.70-(j*0.02), -0.18 + i*0.02], r, {
+					color: '#f03',
+					opacity: 0.7,
+					weight: 2,
+					startAngle: 15 * i,
+					stopAngle: 360 - (15 * i)
+				}).addTo(map);
+			}
+		}
+
+		map.setView([50.60, -0.0], 12);
+
+		var cloudmade = L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+			attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+			maxZoom: 18,
+			key: 'BC9A493B41014CAABB98F0471D759707',
+			styleId: 997
+		}).addTo(map);
+
+	</script>
+</body>
+</html>
