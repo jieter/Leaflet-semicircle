@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Semicircle example</title>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" />
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
+	<script src="Semicircle.js"></script>
+</head>
+<body>
+	<div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
+
+	<script>
+		var map = L.map('map');
+
+		var latlng = [51.508, -0.09];
+
+		var dir = 270
+		var circle = L.circle(latlng, 50000,{
+			weight: 10,
+			color: '#ff0',
+			opacity: 1,
+			fillOpacity: 0.9
+		}).setDirection(dir, 270).addTo(map);
+
+		var open, counter = 1;
+		setInterval(function(){
+			counter += 0.5;
+			open = 358 - (1 + Math.sin(counter)) * 45;
+
+			circle.setDirection(dir, open);
+		}, 80);
+
+
+		map.setView(latlng, 8);
+
+		var cloudmade = L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+			attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+			maxZoom: 18,
+			key: 'BC9A493B41014CAABB98F0471D759707',
+			styleId: 997
+		}).addTo(map);
+	</script>
+	<style>
+		.leaflet-div-icon{
+			font-family: sans-serif;
+			background: transparent;
+			border: 0;
+			white-space: nowrap;
+		}
+		.leaflet-div-icon pre{
+			display: inline-block;
+		}
+	</style>
+</body>
+</html>
