@@ -16,7 +16,7 @@ L.LatLng.prototype.translate = function (matrix, offset) {
 
 L.Pacman = L.Circle.extend({
 	options: {
-		size: 500,
+		size: 400,
 		moveOffset: 0.02
 	},
 	statics: {
@@ -74,7 +74,7 @@ L.Pacman = L.Circle.extend({
 	},
 
 	move: function (direction) {
-		var offset = this.options.moveOffset * this.pixelSize();
+		var offset = this.options.moveOffset * (this.pixelSize() / 1.6);
 		this._position.translate(direction, offset);
 		if (direction[0] == 1) {
 			this._direction = 90;
