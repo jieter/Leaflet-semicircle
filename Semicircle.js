@@ -14,10 +14,10 @@ L.Circle = L.Circle.extend({
 
 	// make sure 0 degrees is up (North) and convert to radians.
 	startAngle: function () {
-		return (this.options.startAngle - 90) * Math.PI / 180;
+		return (this.options.startAngle - 90) * L.LatLng.DEG_TO_RAD;
 	},
 	stopAngle: function () {
-		return (this.options.stopAngle - 90) * Math.PI / 180;
+		return (this.options.stopAngle - 90) * L.LatLng.DEG_TO_RAD;
 	},
 
 	//rotate point x,y+r around x,y with angle.

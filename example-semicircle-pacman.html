@@ -4,7 +4,9 @@
 	<title>Leaflet Semicircle example</title>
 
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" />
-
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css" />
+	<![endif]-->
 	<script src="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
 	<script src="Semicircle.js"></script>
 </head>
@@ -16,7 +18,7 @@
 
 		var latlng = [51.508, -0.09];
 
-		var dir = 270
+		var dir = 270;
 		var circle = L.circle(latlng, 50000,{
 			weight: 10,
 			color: '#ff0',
@@ -42,16 +44,5 @@
 			styleId: 997
 		}).addTo(map);
 	</script>
-	<style>
-		.leaflet-div-icon{
-			font-family: sans-serif;
-			background: transparent;
-			border: 0;
-			white-space: nowrap;
-		}
-		.leaflet-div-icon pre{
-			display: inline-block;
-		}
-	</style>
 </body>
 </html>
