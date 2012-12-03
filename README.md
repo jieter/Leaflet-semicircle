@@ -5,9 +5,9 @@ Adds simicircle functionality to L.Circle. Angles are difined like compass cours
 
 ## Provided methods ##
 <table>
-<tr><td><code>L.Circle.setStartAngle(angle)</code></td><td>Set the start angle of the circle to `angle` and redraw.</td></tr>
-<tr><td><code>L.Circle.setStopAngle(angle)</code></td><td>Set the stop angle of the circle to `angle` and redraw.</td></tr>
-<tr><td><code>L.Circle.setDirection(direction, size)</code></td><td>Set the `startAngle` to `direction - (0.5 * size)` and the `stopAngle` to `direction + (0.5 * size)` and redraw.</td></tr>
+<tr><td><code>L.Circle.setStartAngle(angle)</code></td><td>Set the start angle of the circle to <code>angle</code> and redraw.</td></tr>
+<tr><td><code>L.Circle.setStopAngle(angle)</code></td><td>Set the stop angle of the circle to <code>angle</code> and redraw.</td></tr>
+<tr><td><code>L.Circle.setDirection(direction, size)</code></td><td>Set the <code>startAngle</code> to <code>direction - (0.5 * size)</code> and the <code>stopAngle</code> to <code>direction + (0.5 * size)</code> and redraw.</td></tr>
 </table>
 
 ## Known issues
