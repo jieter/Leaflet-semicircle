@@ -26,9 +26,15 @@ L.Circle = L.Circle.extend({
 			L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r)
 		).round();
 	},
+
 	getPathString: function () {
 		var center = this._point,
 		    r = this._radius;
+
+		// If we want a circle, we use L.Circle's getPathString()
+		if (this.options.startAngle == 0 && this.options.stopAngle > 359 ) {
+			return L.Circle.prototype.getPathString.call();
+		}
 
 		var start = this.rotated(this.startAngle(), r),
 			end = this.rotated(this.stopAngle(), r);
