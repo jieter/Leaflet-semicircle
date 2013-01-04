@@ -16,6 +16,7 @@
 	Not finished yet! Labels only for SVG browsers. <br />
 
 	Labels are not correctly removed in <code>onRemove()</code>
+
 	<div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
 
 	<script>
@@ -43,7 +44,14 @@
 		}).addTo(map);
 
 		// Test removing a Pie chart layer.
-		var foo = L.pie([50.70, 0], [10, 20, 30, 40, 50, 70]).addTo(map);
+		var foo = L.pie(
+			[50.70, 0],
+			[10, 20, 30, 40, 50, 70],
+			{
+				kaas: 'wordt',
+				colors: ['#fff', '#afb', '#fba']
+			}
+		).addTo(map);
 
 		L.marker([50.70, -0.04], {
 			icon: L.divIcon({

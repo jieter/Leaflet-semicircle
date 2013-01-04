@@ -26,6 +26,7 @@
  *  radius: <number>, in meters.
  *  pathOptions: <Leaflet Path options>
  *  labels: <boolean> Display
+ *  colors: <null|array> if colors is an array, the colors will be used for the slices.
  *
  */
 
@@ -39,13 +40,13 @@
 			pathOptions: {
 				weight: 1
 			},
-			labels: true
+			labels: true,
+			colors: null
 		},
 		initialize: function (latlng, data, options) {
 			this._latlng = latlng;
-			this._prepareData(data);
-
 			L.Util.setOptions(this, options);
+			this._prepareData(data);
 		},
 
 		_prepareData: function (data) {
@@ -129,6 +130,11 @@
 					).addTo(map);
 
 				var labelDir = (normalized * 360) / 2  + startAngle;
+				var labelText = this._data[i].label;
+				if (labelText != '') {
+					labelText += ' ';
+				}
+				labelText += L.Util.formatNum(normalized * 100, 1) + '%';
 
 				// add a label.
 				if (this.options.labels) {
@@ -137,7 +143,7 @@
 							this._latlng,
 							this.options.radius,
 							labelDir,
-							L.Util.formatNum(normalized * 100, 1) + '%'
+							labelText
 						).addTo(map);
 				}
 
@@ -168,6 +174,10 @@
 			}
 			this._counter++;
 
+			// if an array with colors is passed, use it.
+			if (this.options.colors != null) {
+				return this.options.colors[this._counter % this.options.colors.length];
+			}
 
 			//Based on http://krazydad.com/tutorials/makecolors.php
 			var byte2Hex = function (n) {
@@ -241,11 +251,12 @@ L.PieLabel = L.Circle.extend({
 			);
 
 			var dx = this.options.length;
+			var textAnchor = 'start';
 			if (this._dir > 190) {
 				dx *= -1;
+				textAnchor = 'end';
 			}
 			labelEnd = labelMid.add(L.point(dx, 0));
-
 
 			this._t = this._createElement('text');
 
@@ -253,7 +264,7 @@ L.PieLabel = L.Circle.extend({
 			this._t.setAttribute('y', labelEnd.y);
 			this._t.setAttribute('dx', 2);
 			this._t.setAttribute('dy', 5);
-			this._t.setAttribute('text-anchor', 'start');
+			this._t.setAttribute('text-anchor', textAnchor);
 			this._t.setAttribute('style', 'font: 10px "Arial"');
 			this._t.textContent = this._text;
 
