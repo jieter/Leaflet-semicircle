@@ -7,7 +7,9 @@
 /*global L:true*/
 
 (function (L) {
-	var old_getPathString = L.Circle.prototype.getPathString;
+
+	// save original getPathString function to draw a full circle.
+	var original_getPathString = L.Circle.prototype.getPathString;
 
 	L.Circle = L.Circle.extend({
 		options: {
@@ -16,11 +18,14 @@
 		},
 
 		// make sure 0 degrees is up (North) and convert to radians.
+		_fixAngle: function (angle) {
+ 			return (angle - 90) * L.LatLng.DEG_TO_RAD;
+		},
 		startAngle: function () {
-			return (this.options.startAngle - 90) * L.LatLng.DEG_TO_RAD;
+			return this._fixAngle(this.options.startAngle);
 		},
 		stopAngle: function () {
-			return (this.options.stopAngle - 90) * L.LatLng.DEG_TO_RAD;
+			return this._fixAngle(this.options.stopAngle);
 		},
 
 		//rotate point x,y+r around x,y with angle.
@@ -34,9 +39,9 @@
 			var center = this._point,
 			    r = this._radius;
 
-			// If we want a circle, we use L.Circle's getPathString()
+			// If we want a circle, we use the original function
 			if (this.options.startAngle == 0 && this.options.stopAngle > 359 ) {
-				return old_getPathString.call(this);
+				return original_getPathString.call(this);
 			}
 
 			var start = this.rotated(this.startAngle(), r),

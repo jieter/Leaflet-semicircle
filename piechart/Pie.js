@@ -1,0 +1,274 @@
+/**
+ * Pie chart extension for leaflet using Leaflet-semicircle.
+ * Jan Pieter Waagmeester <jieter@jieter.nl>
+ *
+ * latlng
+ *  Location to add the pie chart.
+ *
+ * data - The data for Leaflet Pie chart can be supplied in three ways:
+ *
+ *  = single number: display two parts, random colors.
+ *  = array of numbers: display numbers in array normalized to 360 degrees, random colors.
+ *  = array of objects:
+ * [
+ *   {
+ *      num: <number>,
+ *      color: "<color>",
+ *      label: "label A"
+ *   },
+ *   {
+ *      num: // etc...
+ *   }
+ * ]
+ * If color is omitted, a random (predictable) color will be be choosen.
+ *
+ * options - for the pie charts.
+ *  radius: <number>, in meters.
+ *  pathOptions: <Leaflet Path options>
+ *  labels: <boolean> Display
+ *
+ */
+
+/*jshint browser:true, strict:false, globalstrict:false, indent:4, white:true, smarttabs:true*/
+/*global L:true*/
+
+(function (L) {
+	L.Pie = L.Class.extend({
+		options: {
+			radius: 500,
+			pathOptions: {
+				weight: 1
+			},
+			labels: true
+		},
+		initialize: function (latlng, data, options) {
+			this._latlng = latlng;
+			this._prepareData(data);
+
+			L.Util.setOptions(this, options);
+		},
+
+		_prepareData: function (data) {
+			this._count = 0;
+			this._sum = 0;
+			this._data = {};
+
+			var part;
+			for (var i = 0; i < data.length; i++) {
+				if (typeof(data[i]) == 'number') {
+					part = {
+						num: data[i]
+					};
+				} else {
+					part = data[i];
+				}
+				if (!part.color) {
+					part.color = this.randomColor();
+				}
+				if (!part.label) {
+					part.label = '';
+				}
+
+				this._count++;
+				this._sum += part.num;
+				this._data[i] = part;
+			}
+		},
+
+		setData: function (data) {
+			this._prepareData(data);
+			// TODO: redraw
+			return this;
+		},
+
+		redraw: function () {
+			// TODO implement
+			return this;
+		},
+
+		// return the sum of the input data.
+		sum: function () {
+			return this._sum;
+		},
+		count: function () {
+			return this._count;
+		},
+
+		_normalize: function (num) {
+			return num / this.sum();
+		},
+		_color: function (index) {
+			return this._data[index].color;
+		},
+
+		// layer implementation.
+		onAdd: function (map) {
+			this._parts = [];
+			var startAngle = 0;
+			var stopAngle = 0;
+
+			for (var i = 0; i < this.count(); i++) {
+				var normalized = this._normalize(this._data[i].num);
+
+				stopAngle = normalized * 360 + startAngle;
+
+				// set start/stop Angle and color for semicircle
+				var options = {
+					startAngle: startAngle,
+					stopAngle: stopAngle,
+
+					fillColor: this._color(i),
+					color: this._color(i)
+				};
+
+				this._data[i]._part =
+					L.circle(
+						this._latlng,
+						this.options.radius,
+						L.Util.extend({}, this.options.pathOptions, options)
+					).addTo(map);
+
+				var labelDir = (normalized * 360) / 2  + startAngle;
+
+				// add a label.
+				if (this.options.labels) {
+					this._data[i]._label =
+						new L.PieLabel(
+							this._latlng,
+							this.options.radius,
+							labelDir,
+							L.Util.formatNum(normalized * 100, 1) + '%'
+						).addTo(map);
+				}
+
+				startAngle = stopAngle;
+			}
+			return this;
+		},
+		addTo: function (map) {
+			map.addLayer(this);
+			return this;
+		},
+
+		onRemove: function (map) {
+			for (var i = 0; i < this.count(); i++) {
+				this._data[i]._part.onRemove(map);
+				if (this.options.labels) {
+					this._data[i]._label.onRemove(map);
+				}
+			}
+			return this;
+		},
+		_reset: function () {
+
+		},
+		randomColor: function () {
+			if (this._counter === undefined) {
+				this._counter = 0;
+			}
+			this._counter++;
+
+
+			//Based on http://krazydad.com/tutorials/makecolors.php
+			var byte2Hex = function (n) {
+				var nybHexString = "0123456789ABCDEF";
+				return (
+					String(nybHexString.substr((n >> 4) & 0x0F, 1)) +
+					String(nybHexString.substr(n & 0x0F, 1))
+				);
+			};
+			return '#' +
+				byte2Hex(Math.sin(1.666 * this._counter) * 127 + 128) +
+				byte2Hex(Math.sin(2.666 * this._counter) * 127 + 128) +
+				byte2Hex(Math.sin(3.666 * this._counter) * 127 + 128);
+		}
+	});
+})(L);
+
+
+L.pie = function (latlng, param, options) {
+	var data = [];
+	if (typeof(param) == "number") {
+		// for a single number, a percentage is assumed.
+		param = param / 100;
+		data.push(param);
+		data.push(1 - param);
+	} else {
+		data = param;
+	}
+
+	if (!options) {
+		options = {};
+	}
+	return new L.Pie(latlng, data, options);
+};
+
+/**
+ * Draw a label for a pie chart.
+ */
+L.PieLabel = L.Circle.extend({
+	options: {
+		buffer: 2,
+		length: 20,
+		fill: false,
+		weight: 1,
+		color: '#000'
+	},
+	initialize: function(latlng, radius, dir, text, options) {
+		L.Circle.prototype.initialize.call(this, latlng, radius, options)
+		this._dir = dir;
+		this._text = text;
+	},
+
+	onRemove: function (map) {
+	this._container.removeChild(this._t);
+
+		L.Circle.prototype.onRemove.call(this, map);
+
+	},
+	getPathString: function () {
+		var center = this._point,
+			    r = this._radius;
+
+
+			var labelStart = this.rotated(
+				this._fixAngle(this._dir),
+				r + this.options.buffer
+			),
+			labelMid = this.rotated(
+				this._fixAngle(this._dir),
+				r + this.options.buffer + this.options.length
+			);
+
+			var dx = this.options.length;
+			if (this._dir > 190) {
+				dx *= -1;
+			}
+			labelEnd = labelMid.add(L.point(dx, 0));
+
+
+			this._t = this._createElement('text');
+
+			this._t.setAttribute('x', labelEnd.x);
+			this._t.setAttribute('y', labelEnd.y);
+			this._t.setAttribute('dx', 2);
+			this._t.setAttribute('dy', 5);
+			this._t.setAttribute('text-anchor', 'start');
+			this._t.setAttribute('style', 'font: 10px "Arial"');
+			this._t.textContent = this._text;
+
+			this._container.appendChild(this._t);
+
+			if (L.Browser.svg) {
+
+				//move to labelStart
+				var ret = "M" + labelStart.x + "," + labelStart.y;
+
+				ret += "L " + labelMid.x + "," + labelMid.y;
+				// horizontal part.
+				ret += "L " + labelEnd.x + ", " + labelEnd.y;
+
+				return ret;
+			}
+	}
+});
