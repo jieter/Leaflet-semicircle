@@ -80,8 +80,8 @@
 
 		setData: function (data) {
 			this._prepareData(data);
-			// TODO: redraw
-			return this;
+
+			return this.redraw();
 		},
 
 		redraw: function () {
@@ -226,59 +226,81 @@ L.PieLabel = L.Circle.extend({
 		weight: 1,
 		color: '#000'
 	},
+
 	initialize: function (latlng, radius, dir, text, options) {
 		L.Circle.prototype.initialize.call(this, latlng, radius, options);
 		this._dir = dir;
 		this._text = text;
 	},
 
-	onRemove: function (map) {
-		this._container.removeChild(this._t);
+	projectLatlngs: function () {
+		L.Circle.prototype.projectLatlngs.call(this);
 
-		L.Circle.prototype.onRemove.call(this, map);
+		var r = this._radius;
 
-	},
-	getPathString: function () {
-		var center = this._point,
-			    r = this._radius;
-
-		var labelStart = this.rotated(
+		this._labelStart = this.rotated(
 			this._fixAngle(this._dir),
 			r + this.options.buffer
-		),
-		labelMid = this.rotated(
+		);
+		this._labelMid = this.rotated(
 			this._fixAngle(this._dir),
 			r + this.options.buffer + this.options.length
 		);
 
 		var dx = this.options.length;
-		var textAnchor = 'start';
 		if (this._dir > 190) {
 			dx *= -1;
-			textAnchor = 'end';
 		}
-		labelEnd = labelMid.add(L.point(dx, 0));
+		this._labelEnd = this._labelMid.add(L.point(dx, 0));
+	},
+
+	_textAnchor: function () {
+		return this._dir > 190 ? 'end' : 'start';
+	},
+
+	onAdd: function (map) {
+		L.Circle.prototype.onAdd.call(this, map);
+
+		map.on('viewreset', this._reset, this);
 
 		this._t = this._createElement('text');
 
-		this._t.setAttribute('x', labelEnd.x);
-		this._t.setAttribute('y', labelEnd.y);
+		this._t.setAttribute('x', this._labelEnd.x);
+		this._t.setAttribute('y', this._labelEnd.y);
 		this._t.setAttribute('dx', 2);
 		this._t.setAttribute('dy', 5);
-		this._t.setAttribute('text-anchor', textAnchor);
+		this._t.setAttribute('text-anchor', this._textAnchor());
 		this._t.setAttribute('style', 'font: 10px "Arial"');
 		this._t.textContent = this._text;
 
 		this._container.appendChild(this._t);
+	},
 
+	onRemove: function (map) {
+		L.Circle.prototype.onRemove.call(this, map);
+
+		this._container.removeChild(this._t);
+		this._t = null;
+
+		map.on('viewreset', this._reset, this);
+	},
+
+	_reset: function () {
+		if (this._t) {
+			this._t.setAttribute('x', this._labelEnd.x);
+			this._t.setAttribute('y', this._labelEnd.y);
+		}
+	},
+
+	getPathString: function () {
 		if (L.Browser.svg) {
 
 			//move to labelStart
-			var ret = "M" + labelStart.x + "," + labelStart.y;
+			var ret = "M" + this._labelStart.x + "," + this._labelStart.y;
 
-			ret += "L " + labelMid.x + "," + labelMid.y;
+			ret += "L " + this._labelMid.x + "," + this._labelMid.y;
 			// horizontal part.
-			ret += "L " + labelEnd.x + ", " + labelEnd.y;
+			ret += "L " + this._labelEnd.x + ", " + this._labelEnd.y;
 
 			return ret;
 		}

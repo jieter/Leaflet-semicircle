@@ -19,7 +19,7 @@
 
 		// make sure 0 degrees is up (North) and convert to radians.
 		_fixAngle: function (angle) {
- 			return (angle - 90) * L.LatLng.DEG_TO_RAD;
+			return (angle - 90) * L.LatLng.DEG_TO_RAD;
 		},
 		startAngle: function () {
 			return this._fixAngle(this.options.startAngle);
@@ -40,7 +40,7 @@
 			    r = this._radius;
 
 			// If we want a circle, we use the original function
-			if (this.options.startAngle == 0 && this.options.stopAngle > 359 ) {
+			if (this.options.startAngle === 0 && this.options.stopAngle > 359) {
 				return original_getPathString.call(this);
 			}
 
