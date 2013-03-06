@@ -1,7 +1,7 @@
 Leaflet-Semicircle.
 -------------------
 
-Adds simicircle functionality to L.Circle. Angles are difined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will draw full circles.
+Adds simicircle functionality to L.Circle. Angles are defined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will just draw full circles.
 
 ## Provided methods ##
 <table>
@@ -38,6 +38,7 @@ L.circle([51.5, -0.09], 500)
 ```
 
 ## Screenshot:
+
 [Live demo](http://jieter.github.com/Leaflet-semicircle/example-semicircle.html)
 
 ![Semicircles screenshot](https://raw.github.com/jieter/Leaflet-semicircle/master/screenshot.png)
