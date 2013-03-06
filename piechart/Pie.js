@@ -37,15 +37,17 @@
 	L.Pie = L.Class.extend({
 		options: {
 			radius: 500,
-			pathOptions: {
-				weight: 1
-			},
 			labels: true,
 			colors: null
+		},
+		pathOptions: {
+			weight: 1
 		},
 		initialize: function (latlng, data, options) {
 			this._latlng = latlng;
 			L.Util.setOptions(this, options);
+
+			this.options.pathOptions = L.Util.extend({}, this.pathOptions, options.pathOptions);
 			this._prepareData(data);
 		},
 
@@ -126,12 +128,12 @@
 					L.circle(
 						this._latlng,
 						this.options.radius,
-						L.Util.extend({}, this.options.pathOptions, options)
+						L.Util.extend({}, options, this.options.pathOptions)
 					).addTo(map);
 
 				var labelDir = (normalized * 360) / 2  + startAngle;
 				var labelText = this._data[i].label;
-				if (labelText != '') {
+				if (labelText !== '') {
 					labelText += ' ';
 				}
 				labelText += L.Util.formatNum(normalized * 100, 1) + '%';
@@ -175,7 +177,7 @@
 			this._counter++;
 
 			// if an array with colors is passed, use it.
-			if (this.options.colors != null) {
+			if (this.options.colors !== null) {
 				return this.options.colors[this._counter % this.options.colors.length];
 			}
 
@@ -224,14 +226,14 @@ L.PieLabel = L.Circle.extend({
 		weight: 1,
 		color: '#000'
 	},
-	initialize: function(latlng, radius, dir, text, options) {
-		L.Circle.prototype.initialize.call(this, latlng, radius, options)
+	initialize: function (latlng, radius, dir, text, options) {
+		L.Circle.prototype.initialize.call(this, latlng, radius, options);
 		this._dir = dir;
 		this._text = text;
 	},
 
 	onRemove: function (map) {
-	this._container.removeChild(this._t);
+		this._container.removeChild(this._t);
 
 		L.Circle.prototype.onRemove.call(this, map);
 
@@ -240,46 +242,45 @@ L.PieLabel = L.Circle.extend({
 		var center = this._point,
 			    r = this._radius;
 
+		var labelStart = this.rotated(
+			this._fixAngle(this._dir),
+			r + this.options.buffer
+		),
+		labelMid = this.rotated(
+			this._fixAngle(this._dir),
+			r + this.options.buffer + this.options.length
+		);
 
-			var labelStart = this.rotated(
-				this._fixAngle(this._dir),
-				r + this.options.buffer
-			),
-			labelMid = this.rotated(
-				this._fixAngle(this._dir),
-				r + this.options.buffer + this.options.length
-			);
+		var dx = this.options.length;
+		var textAnchor = 'start';
+		if (this._dir > 190) {
+			dx *= -1;
+			textAnchor = 'end';
+		}
+		labelEnd = labelMid.add(L.point(dx, 0));
 
-			var dx = this.options.length;
-			var textAnchor = 'start';
-			if (this._dir > 190) {
-				dx *= -1;
-				textAnchor = 'end';
-			}
-			labelEnd = labelMid.add(L.point(dx, 0));
+		this._t = this._createElement('text');
 
-			this._t = this._createElement('text');
+		this._t.setAttribute('x', labelEnd.x);
+		this._t.setAttribute('y', labelEnd.y);
+		this._t.setAttribute('dx', 2);
+		this._t.setAttribute('dy', 5);
+		this._t.setAttribute('text-anchor', textAnchor);
+		this._t.setAttribute('style', 'font: 10px "Arial"');
+		this._t.textContent = this._text;
 
-			this._t.setAttribute('x', labelEnd.x);
-			this._t.setAttribute('y', labelEnd.y);
-			this._t.setAttribute('dx', 2);
-			this._t.setAttribute('dy', 5);
-			this._t.setAttribute('text-anchor', textAnchor);
-			this._t.setAttribute('style', 'font: 10px "Arial"');
-			this._t.textContent = this._text;
+		this._container.appendChild(this._t);
 
-			this._container.appendChild(this._t);
+		if (L.Browser.svg) {
 
-			if (L.Browser.svg) {
+			//move to labelStart
+			var ret = "M" + labelStart.x + "," + labelStart.y;
 
-				//move to labelStart
-				var ret = "M" + labelStart.x + "," + labelStart.y;
+			ret += "L " + labelMid.x + "," + labelMid.y;
+			// horizontal part.
+			ret += "L " + labelEnd.x + ", " + labelEnd.y;
 
-				ret += "L " + labelMid.x + "," + labelMid.y;
-				// horizontal part.
-				ret += "L " + labelEnd.x + ", " + labelEnd.y;
-
-				return ret;
-			}
+			return ret;
+		}
 	}
 });
