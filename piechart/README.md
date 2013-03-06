@@ -22,6 +22,5 @@ L.pie([50.68, 0.05], [
 	{num: 60, label: 'Tom'},
 	{num: 45, label: 'Ada'}
 ]).addTo(map);
-
-
 ```
+![Semicircles screenshot](screenshot.png)
