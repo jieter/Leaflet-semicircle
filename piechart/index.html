@@ -44,11 +44,18 @@
 		// Pie chart using an array of numbers.
 		L.pie([50.68, 0], [45, 50, 45]).addTo(map);
 
+		// Pie chart using an array of {num: <>, label: <>}-maps
+		L.pie([50.68, 0.05], [
+			{num: 45, label: 'Bob'},
+			{num: 60, label: 'Tom'},
+			{num: 45, label: 'Ada'}
+		]).addTo(map);
+
 		// annotation
 		L.marker([50.68, -0.04], {
 			icon: L.divIcon({
 				iconSize: [200, 0],
-				html: 'Using array of numbers:'
+				html: 'Using arrays (numbers/maps):'
 			})
 		}).addTo(map);
 

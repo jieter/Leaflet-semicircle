@@ -133,10 +133,13 @@
 
 				var labelDir = (normalized * 360) / 2  + startAngle;
 				var labelText = this._data[i].label;
-				if (labelText !== '') {
-					labelText += ' ';
+				if (this._data[i].label) {
+					labelText += ' (';
 				}
 				labelText += L.Util.formatNum(normalized * 100, 1) + '%';
+				if (this._data[i].label) {
+					labelText += ')';
+				}
 
 				// add a label.
 				if (this.options.labels) {
