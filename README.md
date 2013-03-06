@@ -41,4 +41,4 @@ L.circle([51.5, -0.09], 500)
 
 [Live demo](http://jieter.github.com/Leaflet-semicircle/example-semicircle.html)
 
-![Semicircles screenshot](https://raw.github.com/jieter/Leaflet-semicircle/master/screenshot.png)
+![Semicircles screenshot](screenshot.png)
