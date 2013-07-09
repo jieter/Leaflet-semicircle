@@ -3,10 +3,10 @@
 <head>
 	<title>Leaflet Pacman</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
 	<link rel="stylesheet" href="pacman.css" />
 
-	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet-src.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet-src.js"></script>
 
 	<script src="../Semicircle.js"></script>
 	<script src="Pacman.js"></script>
@@ -22,13 +22,11 @@
 
 		map.setView(startAt, 12);
 
-		var stamenAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' + 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
-
-		L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-			attribution: stamenAttr,
-			subdomains: 'abcd',
-			minZoom: 0,
-			maxZoom: 20
+		var layer = L.tileLayer("http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png", {
+			"attribution": 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+			"subdomains": "abcd",
+			"minZoom": 0,
+			"maxZoom": 20
 		}).addTo(map);
 
 		// make pacman
