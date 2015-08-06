@@ -1,13 +1,24 @@
 Leaflet-Semicircle.
 -------------------
 
-Adds simicircle functionality to L.Circle. Angles are defined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will just draw full circles.
+Adds simicircle functionality to L.Circle. Angles are defined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will fall back drawing full circles.
+
+Updated for use with leaflet 1.0.0-b1.
 
 ## Provided methods ##
 <table>
-<tr><td><code>L.Circle.setStartAngle(angle)</code></td><td>Set the start angle of the circle to <code>angle</code> and redraw.</td></tr>
-<tr><td><code>L.Circle.setStopAngle(angle)</code></td><td>Set the stop angle of the circle to <code>angle</code> and redraw.</td></tr>
-<tr><td><code>L.Circle.setDirection(direction, size)</code></td><td>Set the <code>startAngle</code> to <code>direction - (0.5 * size)</code> and the <code>stopAngle</code> to <code>direction + (0.5 * size)</code> and redraw.</td></tr>
+<tr>
+    <td><code>L.Circle.setStartAngle(angle)</code></td>
+    <td>Set the start angle of the circle to <code>angle</code> and redraw.</td>
+</tr>
+<tr>
+    <td><code>L.Circle.setStopAngle(angle)</code></td>
+    <td>Set the stop angle of the circle to <code>angle</code> and redraw.</td>
+</tr>
+<tr>
+    <td><code>L.Circle.setDirection(direction, size)</code></td>
+    <td>Set the <code>startAngle</code> to <code>direction - (0.5 * size)</code> and the <code>stopAngle</code> to <code>direction + (0.5 * size)</code> and redraw.</td>
+</tr>
 </table>
 
 ## Known issues
