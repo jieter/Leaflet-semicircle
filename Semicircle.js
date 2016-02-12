@@ -2,8 +2,22 @@
  * Semicircle extension for L.Circle.
  * Jan Pieter Waagmeester <jieter@jieter.nl>
  */
-
-(function (L) {
+(function (factory) {
+    var L;
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['leaflet'], factory);
+    } else if (typeof module !== 'undefined') {
+        // Node/CommonJS
+        L = require('leaflet');
+        module.exports = factory(L);
+    } else {
+        // Browser globals
+        if (typeof window.L === 'undefined')
+            throw 'Leaflet must be loaded first';
+        factory(window.L);
+    }
+})(function (L) {
 
 	var DEG_TO_RAD = Math.PI / 180;
 
@@ -78,4 +92,4 @@
 			this._setPath(layer, d);
 		}
 	})
-})(L);
+});
