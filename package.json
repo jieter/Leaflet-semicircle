@@ -1,0 +1,29 @@
+{
+  "name": "leaflet-semicircle",
+  "version": "1.0.0",
+  "description": "Draw semicircles on Leaflet maps",
+  "main": "Semicircle.js",
+  "scripts": {
+    "test": "eslint Semicircle.js piechart/Pie.js",
+    "release": "mversion patch -m"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jieter/Leaflet-semicircle.git"
+  },
+  "keywords": [
+    "leaflet",
+    "map",
+    "semicircle",
+    "piechart"
+  ],
+  "author": "Jan Pieter Waagmeester <jieter@jieter.nl>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jieter/Leaflet-semicircle/issues"
+  },
+  "homepage": "https://github.com/jieter/Leaflet-semicircle#readme",
+  "devDependencies": {
+    "mversion": "^1.10.1"
+  }
+}

@@ -184,9 +184,9 @@
 				return this.options.colors[this._counter % this.options.colors.length];
 			}
 
-			//Based on http://krazydad.com/tutorials/makecolors.php
+			// Based on http://krazydad.com/tutorials/makecolors.php
 			var byte2Hex = function (n) {
-				var nybHexString = "0123456789ABCDEF";
+				var nybHexString = '0123456789ABCDEF';
 				return (
 					String(nybHexString.substr((n >> 4) & 0x0F, 1)) +
 					String(nybHexString.substr(n & 0x0F, 1))
@@ -203,7 +203,7 @@
 
 L.pie = function (latlng, param, options) {
 	var data = [];
-	if (typeof(param) == "number") {
+	if (typeof(param) == 'number') {
 		// for a single number, a percentage is assumed.
 		param = param / 100;
 		data.push(param);
@@ -299,11 +299,11 @@ L.PieLabel = L.Circle.extend({
 		if (L.Browser.svg) {
 
 			//move to labelStart
-			var ret = "M" + this._labelStart.x + "," + this._labelStart.y;
+			var ret = 'M' + this._labelStart.x + ',' + this._labelStart.y;
 
-			ret += "L " + this._labelMid.x + "," + this._labelMid.y;
+			ret += 'L ' + this._labelMid.x + ',' + this._labelMid.y;
 			// horizontal part.
-			ret += "L " + this._labelEnd.x + ", " + this._labelEnd.y;
+			ret += 'L ' + this._labelEnd.x + ', ' + this._labelEnd.y;
 
 			return ret;
 		}
