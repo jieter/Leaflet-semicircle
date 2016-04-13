@@ -2,21 +2,20 @@
  * Semicircle extension for L.Circle.
  * Jan Pieter Waagmeester <jieter@jieter.nl>
  *
- * This version works with leaflet 1.0.0 beta's
+ * This version is tested with leaflet 1.0.0-beta.2
  */
 (function (factory) {
-    var L;
     if (typeof define === 'function' && define.amd) {
         // AMD
         define(['leaflet'], factory);
     } else if (typeof module !== 'undefined') {
         // Node/CommonJS
-        L = require('leaflet');
-        module.exports = factory(L);
+        module.exports = factory(require('leaflet'));
     } else {
         // Browser globals
-        if (typeof window.L === 'undefined')
+        if (typeof window.L === 'undefined') {
             throw 'Leaflet must be loaded first';
+        }
         factory(window.L);
     }
 })(function (L) {

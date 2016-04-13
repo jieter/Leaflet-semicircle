@@ -2,7 +2,6 @@
  * Simple pacman walking over a map, using semicircle.
  */
 
-/*jshint browser:true, debug: true, strict:false, globalstrict:false, indent:4, white:true, smarttabs:true*/
 /*global L:true, console:true*/
 
 
@@ -25,7 +24,8 @@ L.Pacman = L.Circle.extend({
 		UP: [0, -1],
 		DOWN: [0, 1],
 		ANIMATION_DELAY: 80,
-		EARTH_RADIUS: 6378137
+		EARTH_RADIUS: 6378137,
+		DEG_TO_RAD: Math.PI / 180
 	},
 	initialize: function (start) {
 		this._position = L.latLng(start);
@@ -36,11 +36,12 @@ L.Pacman = L.Circle.extend({
 			color: '#000',
 			fillColor: '#ff0',
 			opacity: 1,
-			fillOpacity: 0.95
+			fillOpacity: 0.95,
+			radius: this.options.size
 		};
 
 		// call super constructor.
-		L.Circle.prototype.initialize.call(this, this._position, this.options.size, circleOptions);
+		L.Circle.prototype.initialize.call(this, this._position, circleOptions);
 
 		// start the animation.
 		this._startAnimation();
@@ -50,8 +51,9 @@ L.Pacman = L.Circle.extend({
 		if (!zoom) {
 			zoom = this._map.getZoom();
 		}
-		return L.Pacman.EARTH_RADIUS * Math.cos(this._position.lat * L.LatLng.DEG_TO_RAD) / Math.pow(2, (zoom + 8));
+		return L.Pacman.EARTH_RADIUS * Math.cos(this._position.lat * L.Pacman.DEG_TO_RAD) / Math.pow(2, (zoom + 8));
 	},
+
 	setZoom: function (zoom) {
 		var r = this.pixelSize() * this.options.size;
 
