@@ -1,6 +1,8 @@
 /**
  * Semicircle extension for L.Circle.
  * Jan Pieter Waagmeester <jieter@jieter.nl>
+ *
+ * This version works with leaflet 1.0.0 beta's
  */
 (function (factory) {
     var L;
