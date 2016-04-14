@@ -4,7 +4,7 @@
   "description": "Draw semicircles on Leaflet maps",
   "main": "Semicircle.js",
   "scripts": {
-    "test": "eslint Semicircle.js piechart/Pie.js",
+    "test": "eslint Semicircle.js piechart/Pie.js examples/*",
     "release": "mversion patch -m"
   },
   "repository": {
@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/jieter/Leaflet-semicircle#readme",
   "devDependencies": {
+    "eslint": "^2.7.0",
+    "eslint-plugin-html": "^1.4.0",
     "mversion": "^1.10.1"
   }
 }
