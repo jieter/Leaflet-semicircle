@@ -1,107 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Leaflet Semicircle Pie chart example</title>
+    <title>Leaflet Semicircle Pie chart example</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
-	<!--[if lte IE 8]>
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" />
-	<![endif]-->
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-	<script src="../Semicircle.js"></script>
-	<script src="Pie.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
+    <script src="../Semicircle.js"></script>
+    <script src="Pie.js"></script>
 </head>
 <body>
-	<h1>Pie charts on Leaflet map.</h1>
-	Not finished yet! Labels only for SVG browsers. <br />
+    <h1>Pie charts on Leaflet map.</h1>
+    Not finished yet! Labels only for SVG browsers. <br />
 
-	<div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
+    <div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
 
-	<script>
-		var map = L.map('map');
+    <script>
+        var map = L.map('map').setView([50.68, 0], 13);
 
-		var latlng = [50.66, -0.0];
+        // Pie chart using a single number.
+        L.pie([50.66, -0.0], 45).addTo(map);
 
-		// Pie chart using a single number.
-		L.pie([50.66, -0.0], 45).addTo(map);
+        // Use different opacity for the chunks
+        L.pie([50.66, 0.05], 45, {
+            pathOptions: {
+                opacity: 0.9,
+                fillOpacity: 0.9
+            }
+        }).addTo(map);
 
-		// Use different opacity for the chunks
-		L.pie([50.66, 0.05], 45, {
-			pathOptions: {
-				opacity: 0.9,
-				fillOpacity: 0.9
-			}
-		}).addTo(map);
+        // annotation
+        L.marker([50.66, -0.04], {
+            icon: L.divIcon({
+                iconSize: [200, 0],
+                html: 'Using single number:'
+            })
+        }).addTo(map);
 
-		// annotation
-		L.marker([50.66, -0.04], {
-			icon: L.divIcon({
-				iconSize: [200, 0],
-				html: 'Using single number:'
-			})
-		}).addTo(map);
+        // Pie chart using an array of numbers.
+        L.pie([50.68, 0], [45, 50, 45]).addTo(map);
 
-		// Pie chart using an array of numbers.
-		L.pie([50.68, 0], [45, 50, 45]).addTo(map);
+        // Pie chart using an array of {num: <>, label: <>}-maps
+        L.pie([50.68, 0.05], [
+            {num: 45, label: 'Bob'},
+            {num: 60, label: 'Tom'},
+            {num: 45, label: 'Ada'}
+        ]).addTo(map);
 
-		// Pie chart using an array of {num: <>, label: <>}-maps
-		L.pie([50.68, 0.05], [
-			{num: 45, label: 'Bob'},
-			{num: 60, label: 'Tom'},
-			{num: 45, label: 'Ada'}
-		]).addTo(map);
+        // annotation
+        L.marker([50.68, -0.04], {
+            icon: L.divIcon({
+                iconSize: [200, 0],
+                html: 'Using arrays (numbers/maps):'
+            })
+        }).addTo(map);
 
-		// annotation
-		L.marker([50.68, -0.04], {
-			icon: L.divIcon({
-				iconSize: [200, 0],
-				html: 'Using arrays (numbers/maps):'
-			})
-		}).addTo(map);
+        // Test removing a Pie chart layer.
+        var soonToBeRemoved = L.pie(
+            [50.70, 0],
+            [10, 20, 30, 40, 50, 70],
+            {
+                colors: ['#fff', '#afb', '#fba']
+            }
+        ).addTo(map);
 
-		// Test removing a Pie chart layer.
-		var soonToBeRemoved = L.pie(
-			[50.70, 0],
-			[10, 20, 30, 40, 50, 70],
-			{
-				colors: ['#fff', '#afb', '#fba']
-			}
-		).addTo(map);
+        // annotation
+        L.marker([50.70, -0.04], {
+            icon: L.divIcon({
+                iconSize: [200, 0],
+                html: 'Disappears in 3s:'
+            })
+        }).addTo(map);
 
-		// annotation
-		L.marker([50.70, -0.04], {
-			icon: L.divIcon({
-				iconSize: [200, 0],
-				html: 'Disappears in 3s:'
-			})
-		}).addTo(map);
-
-		setTimeout(function(){
-			map.removeLayer(soonToBeRemoved);
-		}, 3000);
+        setTimeout(function(){
+            map.removeLayer(soonToBeRemoved);
+        }, 3000);
 
 
-		map.setView([50.68, 0], 13);
 
-		L.tileLayer(
-			'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			{
-				attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-				maxZoom: 18
-			}
-		).addTo(map);
-	</script>
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                maxZoom: 18
+            }
+        ).addTo(map);
+    </script>
 
-	<style>
-		.leaflet-div-icon{
-			font-family: sans-serif;
-			background: transparent;
-			border: 0;
-			white-space: nowrap;
-		}
-		.leaflet-div-icon pre{
-			display: inline-block;
-		}
-	</style>
+    <style>
+        .leaflet-div-icon{
+            font-family: sans-serif;
+            background: transparent;
+            border: 0;
+            white-space: nowrap;
+        }
+        .leaflet-div-icon pre{
+            display: inline-block;
+        }
+    </style>
 </body>
 </html>
