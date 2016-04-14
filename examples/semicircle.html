@@ -12,75 +12,80 @@
             padding: 0;
         }
     </style>
-    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
     <script src="../Semicircle.js"></script>
 </head>
 <body>
     <div id="map"></div>
 
     <script>
-        var map = L.map('map');
+        var map = L.map('map').setView([55, 0], 5);
 
-        var radius = 500;
-        var rot;
+        var canvas = L.canvas();
+        var svg = L.svg();
 
-        // draw 12 rows and 16 columns of different simicircles with
-        // options = { startAngle: x, stopAngle: y};
-        for (var i = 1; i <= 16; i++) {
-            for (var j = 1; j <= 12; j++) {
-                rot = j * 60;
-                L.circle([50.70 - (j * 0.02), -0.18 + (i * 0.02)], radius, {
-                    color: '#f03',
-                    opacity: 0.7,
-                    weight: 2,
-                    startAngle: rot + 15 * i,
-                    stopAngle: rot + 360 - (15 * i)
-                }).addTo(map);
-            }
-        }
-
-        // draw a row of 16 columns using setDirection
-        for (var i = 1; i <= 16; i++) {
-            L.circle([50.72, -0.18 + (i * 0.02)], radius, {
-                color: '#03f',
+        function circle (latlng, options) {
+            return L.circle(latlng, L.extend({
+                radius: 50000,
+                color: '#f03',
                 opacity: 0.7,
+                renderer: svg,
                 weight: 2
-            }).setDirection(i * 30, 20).addTo(map);
+            }, options)).addTo(map);
         }
 
-        //annotations:
-        L.marker([50.75, -0.10], {
-            icon: L.divIcon({
-                iconSize: [200, 0],
-                html: 'Using <pre>SetDirection(x, 20)</pre>:'
-            })
-        }).addTo(map);
+        // annotations:
+        function annotation (latlng, text) {
+            L.marker(latlng, {
+                icon: L.divIcon({
+                    iconSize: [0, 0],
+                    html: text
+                })
+            }).addTo(map);
+        }
 
-        L.marker([50.71, -0.10],{
-            icon: L.divIcon({
-                iconSize: [200, 0],
-                html: 'Using <pre>{startAngle: x, stopAngle: y}</pre>:'
-            })
-        }).addTo(map);
+        var angle;
 
-        map.setView([50.60, -0.0], 11);
+        annotation([59.5, -0.10], 'Complete circles:');
+        annotation([58, -0.10], 'Using <pre>{startAngle: x, stopAngle: y}</pre>:');
+        for (var i = 0; i <= 16; i++) {
+            circle([58.5, i * 2]);
 
-        L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-                attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                maxZoom: 18
+            for (var j = 1; j <= 12; j++) {
+                angle = j * 60;
+                circle([58 - (j * 2), i * 2], {
+                    startAngle: angle + 15 * i,
+                    stopAngle: angle + 360 - (15 * i)
+                });
             }
-        ).addTo(map);
+        }
+
+        // yellow circles
+        for (var i = 0; i <= 80; i+= 2) {
+            circle([i, -15], {color: '#ff0'});
+        }
+
+        annotation([61.5, 0], 'Using <pre>SetDirection(x, 20)</pre>:');
+        // draw a row of 16 columns using setDirection
+        for (var i = 0; i <= 16; i++) {
+            circle([60, i * 2], {color: '#03f'}).setDirection(i * 30, 20);
+            circle([62, i * 2], {renderer: canvas, color: '#0ff'}).setDirection(i * 30, i * 20);
+        }
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18,
+            opacity: 0.5
+        }).addTo(map);
     </script>
     <style>
-        .leaflet-div-icon{
+        .leaflet-div-icon {
             font-family: sans-serif;
             background: transparent;
             border: 0;
             white-space: nowrap;
         }
-        .leaflet-div-icon pre{
+        .leaflet-div-icon pre {
             display: inline-block;
         }
     </style>

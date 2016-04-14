@@ -21,10 +21,6 @@ Updated for use with leaflet 1.0.0-b1.
 </tr>
 </table>
 
-## Known issues
- - Not really robust yet for cases when `startAngle` is bigger than `stopAngle`.
- - Behaves differently for those cases on canvas
-
 ## Usage:
 The plugin provides two ways to only display a part of the circle:
 1. Use the `options` map and set `startAngle` and `stopAngle`.

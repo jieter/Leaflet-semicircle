@@ -38,24 +38,37 @@
         return rotated(this, angle, r);
     };
 
-
     L.Circle = L.Circle.extend({
         options: {
             startAngle: 0,
             stopAngle: 359.9999
         },
 
-        startAngle: function () { return fixAngle(this.options.startAngle); },
-        stopAngle: function () { return fixAngle(this.options.stopAngle); },
+        startAngle: function () {
+            if (this.options.startAngle < this.options.stopAngle) {
+                return fixAngle(this.options.startAngle);
+            } else {
+                return fixAngle(this.options.stopAngle);
+            }
+        },
+        stopAngle: function () {
+            if (this.options.startAngle < this.options.stopAngle) {
+                return fixAngle(this.options.stopAngle);
+            } else {
+                return fixAngle(this.options.startAngle);
+            }
+        },
 
         setStartAngle: function (angle) {
             this.options.startAngle = angle;
             return this.redraw();
         },
+
         setStopAngle: function (angle) {
             this.options.stopAngle = angle;
             return this.redraw();
         },
+
         setDirection: function (direction, degrees) {
             if (degrees === undefined) {
                 degrees = 10;
@@ -67,31 +80,71 @@
         }
     });
 
-    // save original getPathString function to draw a full circle.
-    var originalUpdateCircle = L.SVG.prototype._updateCircle;
+    var _updateCircleSVG = L.SVG.prototype._updateCircle;
+    var _updateCircleCanvas = L.Canvas.prototype._updateCircle;
 
     L.SVG.include({
         _updateCircle: function (layer) {
             // If we want a circle, we use the original function
             if (layer.options.startAngle === 0 && layer.options.stopAngle > 359) {
-                return originalUpdateCircle.call(this, layer);
+                return _updateCircleSVG.call(this, layer);
+            }
+            if (layer._empty()) {
+                return this._setPath(layer, 'M0 0');
             }
 
-            var center = layer._point,
-                r = layer._radius;
-
-            var start = layer._point.rotated(layer.startAngle(), r),
-                end = layer._point.rotated(layer.stopAngle(), r);
+            var p = layer._point,
+                r = layer._radius,
+                r2 = Math.round(layer._radiusY || r),
+                start = p.rotated(layer.startAngle(), r),
+                end = p.rotated(layer.stopAngle(), r);
 
             var largeArc = (layer.options.stopAngle - layer.options.startAngle >= 180) ? '1' : '0';
-            // move to center
-            var d = 'M' + center.x + ',' + center.y;
-            // lineTo point on circle startangle from center
-            d += 'L ' + start.x + ',' + start.y;
-            // make circle from point start - end:
-            d += 'A ' + r + ',' + r + ',0,' + largeArc + ',1,' + end.x + ',' + end.y + ' z';
+
+            var d = 'M' + p.x + ',' + p.y +
+                // line to first start point
+                'L' + start.x + ',' + start.y +
+                'A ' + r + ',' + r2 + ',0,' + largeArc + ',1,' + end.x + ',' + end.y +
+                ' z';
 
             this._setPath(layer, d);
         }
-    })
+    });
+
+    L.Canvas.include({
+        _updateCircle: function (layer) {
+            // If we want a circle, we use the original function
+            if (layer.options.startAngle === 0 && layer.options.stopAngle > 359) {
+                return _updateCircleCanvas.call(this, layer);
+            }
+
+            var p = layer._point,
+                ctx = this._ctx,
+                r = layer._radius,
+                s = (layer._radiusY || r) / r,
+                start = p.rotated(layer.startAngle(), r),
+                end = p.rotated(layer.stopAngle(), r);
+
+            this._drawnLayers[layer._leaflet_id] = layer;
+
+            if (s !== 1) {
+                ctx.save();
+                ctx.scale(1, s);
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(start.x, start.y);
+            ctx.arc(p.x, p.y, r, layer.startAngle(), layer.stopAngle());
+            ctx.lineTo(p.x, p.y);
+
+            // ctx.arc(p.x, p.y / s, r, 0, Math.PI * 2, false);
+
+            if (s !== 1) {
+                ctx.restore();
+            }
+
+            this._fillStroke(ctx, layer);
+        }
+    });
 });
