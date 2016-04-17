@@ -12,6 +12,12 @@
     <script src="Pacman.js"></script>
 </head>
 <body>
+    <div id="info">
+        <h4><a href="https://github.com/jieter/Leaflet-semicircle">Walk Pacman on the map using leaflet-semicircle</a></h4>
+        <p>
+            Use the arrow keys to move pacman
+        </p>
+    </div>
     <div id="map"></div>
     <script>
         var startAt = [51.508, -0.09];
@@ -50,6 +56,9 @@
         map.on('zoomend', function (e) {
             pacman.setZoom(e.target._zoom);
         });
+
+        // move the #info div into the map
+        map.addControl(new (L.Control.extend({onAdd: function (map) { return L.DomUtil.get('info'); }}))());
 
     </script>
 </body>
