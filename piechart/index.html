@@ -7,12 +7,48 @@
     <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
     <script src="../Semicircle.js"></script>
     <script src="Pie.js"></script>
+    <style>
+        html {
+            height: 100%;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            vertical-align: baseline;
+        }
+        body { height: 100%; margin: 0; padding: 0;}
+        #map {
+             width: 100%; height: 100%;
+        }
+
+        #info {
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            width: 50%;
+            max-width: 600px;
+            left: 45%;
+            margin-left: -300px;
+            padding: 6px 8px;
+            border-radius: 5px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+        }
+        #info h4:first-child {
+            margin: 0 0 5px;
+        }
+        .leaflet-div-icon{
+            font-family: sans-serif;
+            background: transparent;
+            border: 0;
+            white-space: nowrap;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Pie charts on Leaflet map.</h1>
-    Not finished yet! Labels only for SVG browsers. <br />
-
-    <div id="map" style="width: 100%; height: 800px; border: 1px solid #ccc"></div>
+    <div id="info">
+        <h4><a href="https://github.com/jieter/Leaflet-semicircle">Pie charts using leaflet-semicircle</a></h4>
+    </div>
+    <div id="map"></div>
 
     <script>
         var map = L.map('map').setView([50.68, 0], 13);
@@ -28,13 +64,17 @@
             }
         }).addTo(map);
 
-        // annotation
-        L.marker([50.66, -0.04], {
-            icon: L.divIcon({
-                iconSize: [200, 0],
-                html: 'Using single number:'
-            })
-        }).addTo(map);
+        // annotations:
+        function annotation (latlng, text) {
+            L.marker(latlng, {
+                icon: L.divIcon({
+                    iconSize: [0, 0],
+                    html: text
+                })
+            }).addTo(map);
+        }
+
+        annotation([50.66, -0.04], 'Using single number:');
 
         // Pie chart using an array of numbers.
         L.pie([50.68, 0], [45, 50, 45]).addTo(map);
@@ -46,13 +86,7 @@
             {num: 45, label: 'Ada'}
         ]).addTo(map);
 
-        // annotation
-        L.marker([50.68, -0.04], {
-            icon: L.divIcon({
-                iconSize: [200, 0],
-                html: 'Using arrays (numbers/maps):'
-            })
-        }).addTo(map);
+        annotation([50.68, -0.04], 'Using arrays (numbers/maps):');
 
         // Test removing a Pie chart layer.
         var soonToBeRemoved = L.pie(
@@ -63,39 +97,20 @@
             }
         ).addTo(map);
 
-        // annotation
-        L.marker([50.70, -0.04], {
-            icon: L.divIcon({
-                iconSize: [200, 0],
-                html: 'Disappears in 3s:'
-            })
-        }).addTo(map);
+        annotation([50.70, -0.04], 'Disappears in 3s:');
 
-        setTimeout(function(){
+        setTimeout(function () {
             map.removeLayer(soonToBeRemoved);
         }, 3000);
 
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18
+        }).addTo(map);
 
+        // move the #info div into the map
+        map.addControl(new (L.Control.extend({onAdd: function (map) { return L.DomUtil.get('info'); }}))());
 
-        L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-                attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                maxZoom: 18
-            }
-        ).addTo(map);
     </script>
-
-    <style>
-        .leaflet-div-icon{
-            font-family: sans-serif;
-            background: transparent;
-            border: 0;
-            white-space: nowrap;
-        }
-        .leaflet-div-icon pre{
-            display: inline-block;
-        }
-    </style>
 </body>
 </html>

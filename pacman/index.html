@@ -35,36 +35,19 @@
             39: L.Pacman.RIGHT,
             40: L.Pacman.UP
         };
-        document.addEventListener('keydown', function(e){
-            var keycode;
-            if (window.event) {
-                keycode = window.event.keyCode;
-            } else if (e) {
-                keycode = e.which;
-            }
-            if (!(keycode in key2dir || keycode == 116)) {
+        document.addEventListener('keydown', function (e) {
+            var keycode = window.event ? window.event.keyCode : e.which;
+
+            // do not do anything for other keys than the arrow keys
+            if (!(keycode in key2dir)) {
                 return;
             }
             e.preventDefault();
 
-            var direction;
-
-            if (keycode in key2dir) {
-                direction = key2dir[keycode];
-            } else {
-                switch (keycode) {
-                    case 116: // F5
-                        window.location.reload();
-                    break
-                }
-            }
-
-            if (direction) {
-                pacman.move(direction);
-            }
+            pacman.move(key2dir[keycode]);
         });
 
-        map.on('zoomend', function(e){
+        map.on('zoomend', function (e) {
             pacman.setZoom(e.target._zoom);
         });
 

@@ -25,7 +25,7 @@
  * options - for the pie charts.
  *  radius: <number>, in meters.
  *  pathOptions: <Leaflet Path options>
- *  labels: <boolean> Display
+ *  labels: <boolean> Display labels
  *  colors: <null|array> if colors is an array, the colors will be used for the slices.
  *
  */
@@ -47,23 +47,35 @@
             byte2Hex(Math.sin(3.666 * counter) * 127 + 128);
     };
 
-    L.Pie = L.Layer.extend({
+    L.Pie = L.LayerGroup.extend({
         options: {
+            // radius of the pie chart
             radius: 500,
             labels: true,
             colors: null,
+            // amount of pixels between the arrow and the pie
+            buffer: 2,
+            // length of each arrow segment in pixels
+            length: 20,
 
+            arrowOptions: {
+                fill: false,
+                weight: 1,
+                color: '#000'
+            },
+            sliceOptions: {
+                weight: 2
+            },
         },
-        pathOptions: {
-            weight: 1
-        },
+
 
         initialize: function (latlng, data, options) {
             this._latlng = latlng;
             L.Util.setOptions(this, options);
 
-            this.options.pathOptions = L.Util.extend({}, this.pathOptions, options.pathOptions);
             this._prepareData(data);
+
+            L.LayerGroup.prototype.initialize.call(this);
         },
 
         _prepareData: function (data) {
@@ -73,19 +85,10 @@
 
             var part;
             for (var i = 0; i < data.length; i++) {
-                if (typeof(data[i]) == 'number') {
-                    part = {
-                        num: data[i]
-                    };
-                } else {
-                    part = data[i];
-                }
-                if (!part.color) {
-                    part.color = this.randomColor();
-                }
-                if (!part.label) {
-                    part.label = '';
-                }
+                part = (typeof(data[i]) === 'number') ? {num: data[i]} : data[i];
+
+                part.color = part.color || this.randomColor();
+                part.label = part.label || '';
 
                 this._count++;
                 this._sum += part.num;
@@ -97,11 +100,6 @@
             this._prepareData(data);
 
             return this.redraw();
-        },
-
-        redraw: function () {
-            // TODO implement
-            return this;
         },
 
         // return the sum of the input data.
@@ -117,6 +115,8 @@
             var startAngle = 0;
             var stopAngle = 0;
 
+            this.addTo(map);
+
             for (var i = 0; i < this.count(); i++) {
                 var normalized = this._normalize(this._data[i].num);
 
@@ -130,27 +130,28 @@
                     radius: this.options.radius,
                     fillColor: this._color(i),
                     color: this._color(i)
-                }, this.options.pathOptions);
+                }, this.options.sliceOptions);
 
-                this._data[i]._part = L.circle(this._latlng, options).addTo(map);
-
-                var labelDir = (normalized * 360) / 2  + startAngle;
-                var labelText = this._data[i].label;
-                if (this._data[i].label) {
-                    labelText += ' (';
-                }
-                labelText += L.Util.formatNum(normalized * 100, 1) + '%';
-                if (this._data[i].label) {
-                    labelText += ')';
-                }
+                var slice = L.circle(this._latlng, options).addTo(this);
 
                 // add a label.
                 if (this.options.labels) {
-                    this._data[i]._labelArrow = L.polyline(this._labelArrow(), {
-                        fill: false,
-                        weight: 1,
-                        color: '#000'
-                    }).addTo(map);
+                    // arrow
+                    var arrowLatlngs = this._labelArrow(slice);
+                    L.polyline(arrowLatlngs, this.options.arrowOptions).addTo(this);
+
+                    // text label
+                    var percentage = L.Util.formatNum(normalized * 100, 1) + '%';
+                    var text = (this._data[i].label) ?
+                        this._data[i].label + ' (' + percentage + ')' :
+                        percentage;
+
+                    L.marker(arrowLatlngs[2], {
+                        icon: L.divIcon({
+                            iconSize: [0, 0],
+                            html: text
+                        })
+                    }).addTo(this);
                 }
 
                 startAngle = stopAngle;
@@ -158,38 +159,21 @@
             return this;
         },
 
-        addTo: function (map) {
-            map.addLayer(this);
-            return this;
-        },
-
-        onRemove: function (map) {
-            for (var i = 0; i < this.count(); i++) {
-                this._data[i]._part.onRemove(map);
-                if (this._data[i]._label) {
-                    this._data[i]._label.onRemove(map);
-                }
-            }
-            return this;
-        },
-        _reset: function () {
-
-        },
-
-        _labelArrow: function () {
-            var r = this.options.radius;
-            var buffer = this.options.buffer;
-            var angle = (this._dir - 90) * (Math.PI / 180);
+        _labelArrow: function (slice) {
+            var map = this._map;
+            var p = map.project(this._latlng);
+            var angle = slice.getDirection();
+            var r = slice._radius + this.options.buffer;
             var length = this.options.length;
 
-            var midPoint = this._point.rotated(angle, r + buffer + length);
-
-            return [
-                this._point._rotated(angle, r + buffer),
+            var midPoint = p.rotated(angle, r + length);
+            var points = [
+                p.rotated(angle, r),
                 midPoint,
                 // translate horizontally by length
-                midPoint.add([(this._dir > 190) ? -length : length, 0])
+                midPoint.add([(angle > Math.PI * 0.9) ? -length : length, 0])
             ];
+            return points.map(function (x) { return map.unproject(x); });
         },
 
         randomColor: function () {
@@ -225,81 +209,3 @@ L.pie = function (latlng, param, options) {
     }
     return new L.Pie(latlng, data, options);
 };
-//
-// /**
-//  * Draw a label for a pie chart.
-//  */
-// L.PieLabel = L.Layer.extend({
-//     options: {
-//         radius: 200,
-//         buffer: 2,
-//         length: 20,
-//         fill: false,
-//         weight: 1,
-//         color: '#000'
-//     },
-//
-//     initialize: function (latlng, options) {
-//         L.Util.setOptions(this, options);
-//         self._center = latlng;
-//     },
-//
-//
-//
-//     _textAnchor: function () {
-//         return this._dir > 190 ? 'end' : 'start';
-//     },
-//
-//     onAdd: function (map) {
-//         L.polyline(this.projectLatlngs()).addTo(map);
-//         // L.Circle.prototype.onAdd.call(this, map);
-//
-//         // map.on('viewreset', this._reset, this);
-//
-//         // // this._t = this._createElement('text');
-//         //
-//         // this._t.setAttribute('x', this._labelEnd.x);
-//         // this._t.setAttribute('y', this._labelEnd.y);
-//         // this._t.setAttribute('dx', 2);
-//         // this._t.setAttribute('dy', 5);
-//         // this._t.setAttribute('text-anchor', this._textAnchor());
-//         // this._t.setAttribute('style', 'font: 10px "Arial"');
-//         // this._t.textContent = this._text;
-//         //
-//         // this._container.appendChild(this._t);
-//     },
-//
-//     onRemove: function (map) {
-//         // L.Circle.prototype.onRemove.call(this, map);
-//
-//         // this._container.removeChild(this._t);
-//         // this._t = null;
-//
-//         map.on('viewreset', this._reset, this);
-//     },
-//
-//     _reset: function () {
-//         if (this._t) {
-//             this._t.setAttribute('x', this._labelEnd.x);
-//             this._t.setAttribute('y', this._labelEnd.y);
-//         }
-//     },
-//
-//     getPathString: function () {
-//         if (L.Browser.svg) {
-//
-//             //move to labelStart
-//             var ret = 'M' + this._labelStart.x + ',' + this._labelStart.y;
-//
-//             ret += 'L ' + this._labelMid.x + ',' + this._labelMid.y;
-//             // horizontal part.
-//             ret += 'L ' + this._labelEnd.x + ', ' + this._labelEnd.y;
-//
-//             return ret;
-//         }
-//     }
-// });
-//
-// L.pieLabel = function (latlng, options) {
-//     return new L.PieLabel(latlng, options);
-// };

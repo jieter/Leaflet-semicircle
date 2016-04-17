@@ -16,7 +16,7 @@ L.LatLng.prototype.translate = function (matrix, offset) {
 L.Pacman = L.Circle.extend({
     options: {
         size: 400,
-        moveOffset: 0.02
+        moveOffset: 0.01
     },
     statics: {
         LEFT: [-1, 0],

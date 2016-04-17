@@ -19,7 +19,6 @@
         factory(window.L);
     }
 })(function (L) {
-
     var DEG_TO_RAD = Math.PI / 180;
 
     // make sure 0 degrees is up (North) and convert to radians.
@@ -27,11 +26,11 @@
         return (angle - 90) * DEG_TO_RAD;
     }
 
-    // rotate point [x + r, y+r] around [x, y] with `angle`.
-    function rotated (point, angle, r) {
-        return point.add(
-            L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r)
-        ).round();
+    // rotate point [x + r, y+r] around [x, y] by `angle` radians.
+    function rotated (p, angle, r) {
+        return p.add(
+            L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r).round()
+        );
     }
 
     L.Point.prototype.rotated = function (angle, r) {
@@ -77,6 +76,9 @@
             this.options.stopAngle = direction + (degrees / 2);
 
             return this.redraw();
+        },
+        getDirection: function () {
+            return this.stopAngle() - (this.stopAngle() - this.startAngle()) / 2;
         }
     });
 
