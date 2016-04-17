@@ -1,6 +1,6 @@
 {
   "name": "leaflet-semicircle",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Draw semicircles on Leaflet maps",
   "main": "Semicircle.js",
   "scripts": {
