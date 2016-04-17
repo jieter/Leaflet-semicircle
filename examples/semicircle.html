@@ -31,7 +31,7 @@
                 opacity: 0.7,
                 renderer: svg,
                 weight: 2
-            }, options)).addTo(map);
+            }, options));
         }
 
         // annotations:
@@ -56,20 +56,20 @@
                 circle([58 - (j * 2), i * 2], {
                     startAngle: angle + 15 * i,
                     stopAngle: angle + 360 - (15 * i)
-                });
+                }).addTo(map);
             }
         }
 
         // yellow circles
         for (var i = 0; i <= 80; i+= 2) {
-            circle([i, -15], {color: '#ff0'});
+            circle([i, -15], {color: '#ff0'}).addTo(map);
         }
 
         annotation([61.5, 0], 'Using <pre>SetDirection(x, 20)</pre>:');
         // draw a row of 16 columns using setDirection
         for (var i = 0; i <= 16; i++) {
-            circle([60, i * 2], {color: '#03f'}).setDirection(i * 30, 20);
-            circle([62, i * 2], {renderer: canvas, color: '#0ff'}).setDirection(i * 30, i * 20);
+            circle([60, i * 2], {color: '#03f'}).setDirection(i * 30, 20).addTo(map);
+            circle([62, i * 2], {renderer: canvas, color: '#0ff'}).setDirection(i * 30, i * 20).addTo(map);
         }
 
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

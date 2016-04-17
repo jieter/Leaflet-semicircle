@@ -1,73 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Leaflet Pacman</title>
+    <title>Leaflet Pacman</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.css" />
-	<link rel="stylesheet" href="pacman.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.css" />
+    <link rel="stylesheet" href="pacman.css" />
 
-	<script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
 
-	<script src="../Semicircle.js"></script>
-	<script src="Pacman.js"></script>
+    <script src="../Semicircle.js"></script>
+    <script src="Pacman.js"></script>
 </head>
 <body>
-	<div id="map"></div>
-	<script>
-		var startAt = [51.508, -0.09];
-		var map = L.map('map', {
-			keyboard: false
-		}).setView(startAt, 12);
+    <div id="map"></div>
+    <script>
+        var startAt = [51.508, -0.09];
+        var map = L.map('map', {
+            keyboard: false
+        }).setView(startAt, 12);
 
-		var layer = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-			'attribution': 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-			'subdomains': 'abcd',
-			'minZoom': 0,
-			'maxZoom': 20
-		}).addTo(map);
+        var layer = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            'attribution': 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            'subdomains': 'abcd',
+            'minZoom': 0,
+            'maxZoom': 20
+        }).addTo(map);
 
-		// make pacman
-		var pacman = new L.Pacman(startAt).addTo(map);
+        // make pacman
+        var pacman = new L.Pacman(startAt).addTo(map);
 
-		var key2dir = {
-			37: L.Pacman.LEFT,
-			38: L.Pacman.DOWN,
-			39: L.Pacman.RIGHT,
-			40: L.Pacman.UP
-		};
-		document.addEventListener('keydown', function(e){
-			var keycode;
-			if (window.event) {
-				keycode = window.event.keyCode;
-			} else if (e) {
-				keycode = e.which;
-			}
-			if (!(keycode in key2dir || keycode == 116)) {
-				return;
-			}
-			e.preventDefault();
+        var key2dir = {
+            37: L.Pacman.LEFT,
+            38: L.Pacman.DOWN,
+            39: L.Pacman.RIGHT,
+            40: L.Pacman.UP
+        };
+        document.addEventListener('keydown', function(e){
+            var keycode;
+            if (window.event) {
+                keycode = window.event.keyCode;
+            } else if (e) {
+                keycode = e.which;
+            }
+            if (!(keycode in key2dir || keycode == 116)) {
+                return;
+            }
+            e.preventDefault();
 
-			var direction;
+            var direction;
 
-			if (keycode in key2dir) {
-				direction = key2dir[keycode];
-			} else {
-				switch (keycode) {
-					case 116: // F5
-						window.location.reload();
-					break
-				}
-			}
+            if (keycode in key2dir) {
+                direction = key2dir[keycode];
+            } else {
+                switch (keycode) {
+                    case 116: // F5
+                        window.location.reload();
+                    break
+                }
+            }
 
-			if (direction) {
-				pacman.move(direction);
-			}
-		});
+            if (direction) {
+                pacman.move(direction);
+            }
+        });
 
-		map.on('zoomend', function(e){
-			pacman.setZoom(e.target._zoom);
-		});
+        map.on('zoomend', function(e){
+            pacman.setZoom(e.target._zoom);
+        });
 
-	</script>
+    </script>
 </body>
 </html>
