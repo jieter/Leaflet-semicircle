@@ -79,6 +79,16 @@
         },
         getDirection: function () {
             return this.stopAngle() - (this.stopAngle() - this.startAngle()) / 2;
+        },
+
+        isSemicircle: function () {
+            var startAngle = this.options.startAngle,
+                stopAngle = this.options.stopAngle;
+
+            return (
+                !(startAngle === 0 && stopAngle > 359) &&
+                !(startAngle == stopAngle)
+            );
         }
     });
 
@@ -88,7 +98,7 @@
     L.SVG.include({
         _updateCircle: function (layer) {
             // If we want a circle, we use the original function
-            if (layer.options.startAngle === 0 && layer.options.stopAngle > 359) {
+            if (!layer.isSemicircle()) {
                 return _updateCircleSVG.call(this, layer);
             }
             if (layer._empty()) {
@@ -116,7 +126,7 @@
     L.Canvas.include({
         _updateCircle: function (layer) {
             // If we want a circle, we use the original function
-            if (layer.options.startAngle === 0 && layer.options.stopAngle > 359) {
+            if (!layer.isSemicircle()) {
                 return _updateCircleCanvas.call(this, layer);
             }
 
