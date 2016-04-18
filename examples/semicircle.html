@@ -5,12 +5,17 @@
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.css" />
     <style>
-        body, #map {
-            width: 100%;
-            height: 800px;
-            margin: 0;
-            padding: 0;
-        }
+    html {
+        height: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        vertical-align: baseline;
+    }
+    body { height: 100%; margin: 0; padding: 0;}
+    #map {
+         width: 100%; height: 100%;
+    }
     </style>
     <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet-src.js"></script>
     <script src="../Semicircle.js"></script>
@@ -19,7 +24,7 @@
     <div id="map"></div>
 
     <script>
-        var map = L.map('map').setView([55, 0], 5);
+        var map = L.map('map').setView([55, 0], 4);
 
         var canvas = L.canvas();
         var svg = L.svg();
@@ -47,7 +52,7 @@
 
         annotation([59.5, -0.10], 'Complete circles:');
         annotation([58, -0.10], 'Using <pre>{startAngle: x, stopAngle: y}</pre>:');
-        for (var i = 0; i <= 16; i++) {
+        for (var i = 1; i <= 16; i++) {
             circle([58.5, i * 2]);
 
             for (var j = 1; j <= 12; j++) {
