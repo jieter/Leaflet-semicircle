@@ -3,7 +3,7 @@ Leaflet-Semicircle.
 
 Adds semicircle functionality to L.Circle. Angles are defined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will fall back drawing full circles.
 
-Updated for use with leaflet 1.0.0-b2.
+Updated for use with leaflet 1.0.0-rc.1.
 
 ## Provided methods ##
 <table>
