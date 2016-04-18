@@ -32,7 +32,8 @@
         var map = L.map('map').setView(latlng, 16);
 
         // red, should be a complete circle
-        L.circle(latlng, radius, {
+        L.circle(latlng, {
+            radius: radius,
             startAngle : 0,
             stopAngle : 360,
             fillColor: 'red',
@@ -41,7 +42,8 @@
         }).addTo(map);
 
         // blue, just one quarter, top right.
-        L.circle(latlng, radius - 50, {
+        L.circle(latlng, {
+            radius: radius - 50,
             startAngle : 0,
             stopAngle : 90,
             fillColor: 'blue',
@@ -50,7 +52,8 @@
         }).addTo(map);
 
         // white, almost the entire lower half filled.
-        L.circle(latlng, radius - 15, {
+        L.circle(latlng, {
+            radius: radius - 15,
             startAngle : 90,
             stopAngle : 250,
             fillColor: 'white',
