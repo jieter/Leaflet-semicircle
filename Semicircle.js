@@ -124,8 +124,7 @@
                 ctx = this._ctx,
                 r = layer._radius,
                 s = (layer._radiusY || r) / r,
-                start = p.rotated(layer.startAngle(), r),
-                end = p.rotated(layer.stopAngle(), r);
+                start = p.rotated(layer.startAngle(), r);
 
             this._drawnLayers[layer._leaflet_id] = layer;
 

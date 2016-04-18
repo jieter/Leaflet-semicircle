@@ -51,7 +51,9 @@
         options: {
             // radius of the pie chart
             radius: 500,
+            // Show labels
             labels: true,
+            // array of colors to be used for the slices
             colors: null,
             // amount of pixels between the arrow and the pie
             buffer: 2,
@@ -67,7 +69,6 @@
                 weight: 2
             },
         },
-
 
         initialize: function (latlng, data, options) {
             this._latlng = latlng;
@@ -134,45 +135,44 @@
 
                 var slice = L.circle(this._latlng, options).addTo(this);
 
-                // add a label.
                 if (this.options.labels) {
-                    // arrow
-                    var arrowLatlngs = this._labelArrow(slice);
-                    L.polyline(arrowLatlngs, this.options.arrowOptions).addTo(this);
-
-                    // text label
-                    var percentage = L.Util.formatNum(normalized * 100, 1) + '%';
-                    var text = (this._data[i].label) ?
-                        this._data[i].label + ' (' + percentage + ')' :
-                        percentage;
-
-                    L.marker(arrowLatlngs[2], {
-                        icon: L.divIcon({
-                            iconSize: [0, 0],
-                            html: text
-                        })
-                    }).addTo(this);
+                    this._createLabel(normalized, this._data[i].label, slice);
                 }
-
                 startAngle = stopAngle;
             }
             return this;
         },
 
-        _labelArrow: function (slice) {
+        _createLabel: function (normalized, text, slice) {
             var map = this._map;
             var p = map.project(this._latlng);
             var angle = slice.getDirection();
             var r = slice._radius + this.options.buffer;
             var length = this.options.length;
 
+            var pointsLeft = (angle > Math.PI * 0.9);
+
             var midPoint = p.rotated(angle, r + length);
-            return [
+            var arrowLatlngs = [
                 map.unproject(p.rotated(angle, r)),
                 map.unproject(midPoint),
                 // translate horizontally by length
-                map.unproject(midPoint.add([(angle > Math.PI * 0.9) ? -length : length, 0]))
+                map.unproject(midPoint.add([pointsLeft ? -length : length, 0]))
             ];
+
+            // arrow
+            L.polyline(arrowLatlngs, this.options.arrowOptions).addTo(this);
+
+            // text label
+            var percentage = L.Util.formatNum(normalized * 100, 1) + '%';
+            L.marker(arrowLatlngs[2], {
+                icon: L.divIcon({
+                    className: 'leaflet-pie-label ' + (pointsLeft ? 'left' : 'right'),
+                    iconSize: [100, 20],
+                    iconAnchor: [pointsLeft ? 102 : -2, 10],
+                    html: text ? text + ' (' + percentage + ')' : percentage
+                })
+            }).addTo(this);
         },
 
         randomColor: function () {

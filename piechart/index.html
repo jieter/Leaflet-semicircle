@@ -35,18 +35,37 @@
         #info h4:first-child {
             margin: 0 0 5px;
         }
-        .leaflet-div-icon{
+
+        .leaflet-div-icon {
+            border: none;
+        }
+        .leaflet-pie-label {
             font-family: sans-serif;
             background: transparent;
-            border: 0;
+            border: none;
             white-space: nowrap;
         }
-
+        .leaflet-pie-label.left {
+            text-align: right;
+        }
     </style>
 </head>
 <body>
     <div id="info">
         <h4><a href="https://github.com/jieter/Leaflet-semicircle">Pie charts using leaflet-semicircle</a></h4>
+        <p>
+            When using a single number, it is interpreted as a percentage:
+        </p>
+        <pre>L.pie([50.66, -0.0], 45).addTo(map);</pre>
+        <p>
+            You can also pass an array of <code>{num: Number, label: String}</code>-maps:
+<pre>
+L.pie([50.68, 0.05], [
+    {num: 45, label: 'Bob'},
+    {num: 60, label: 'Tom'},
+    {num: 45, label: 'Ada'}
+]).addTo(map);
+</pre>
     </div>
     <div id="map"></div>
 
@@ -57,7 +76,7 @@
         L.pie([50.66, -0.0], 45).addTo(map);
 
         // Use different opacity for the chunks
-        L.pie([50.66, 0.05], 45, {
+        L.pie([50.66, 0.05], 15, {
             pathOptions: {
                 opacity: 0.9,
                 fillOpacity: 0.9
@@ -77,7 +96,7 @@
         annotation([50.66, -0.04], 'Using single number:');
 
         // Pie chart using an array of numbers.
-        L.pie([50.68, 0], [45, 50, 45]).addTo(map);
+        var piechart = L.pie([50.68, 0], [45, 50, 45]).addTo(map);
 
         // Pie chart using an array of {num: <>, label: <>}-maps
         L.pie([50.68, 0.05], [
@@ -101,6 +120,9 @@
 
         setTimeout(function () {
             map.removeLayer(soonToBeRemoved);
+
+            // this doesn't work (yet)
+            piechart.setData([15, 50, 45]);
         }, 3000);
 
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -109,7 +131,7 @@
         }).addTo(map);
 
         // move the #info div into the map
-        map.addControl(new (L.Control.extend({onAdd: function (map) { return L.DomUtil.get('info'); }}))());
+        map.addControl(new (L.Control.extend({onAdd: function () { return L.DomUtil.get('info'); }}))());
 
     </script>
 </body>

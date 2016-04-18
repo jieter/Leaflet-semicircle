@@ -54,7 +54,7 @@ L.Pacman = L.Circle.extend({
         return L.Pacman.EARTH_RADIUS * Math.cos(this._position.lat * L.Pacman.DEG_TO_RAD) / Math.pow(2, (zoom + 8));
     },
 
-    setZoom: function (zoom) {
+    setZoom: function () {
         var r = this.pixelSize() * this.options.size;
 
         if (r) {
