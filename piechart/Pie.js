@@ -167,13 +167,12 @@
             var length = this.options.length;
 
             var midPoint = p.rotated(angle, r + length);
-            var points = [
-                p.rotated(angle, r),
-                midPoint,
+            return [
+                map.unproject(p.rotated(angle, r)),
+                map.unproject(midPoint),
                 // translate horizontally by length
-                midPoint.add([(angle > Math.PI * 0.9) ? -length : length, 0])
+                map.unproject(midPoint.add([(angle > Math.PI * 0.9) ? -length : length, 0]))
             ];
-            return points.map(function (x) { return map.unproject(x); });
         },
 
         randomColor: function () {
