@@ -25,41 +25,45 @@
     <div id="map"></div>
 
     <script>
-
+        // investigating precision,
+        // https://github.com/jieter/Leaflet-semicircle/issues/4
         var latlng = [52, 4];
-        var radius = 300;
 
         var map = L.map('map').setView(latlng, 16);
 
-        // red, should be a complete circle
-        L.circle(latlng, {
-            radius: radius,
-            startAngle : 0,
-            stopAngle : 360,
-            fillColor: 'red',
-            weight: 0,
-            fillOpacity: 0.8
-        }).addTo(map);
+        function concentric (latlng, radius) {
+            // red, should be a complete circle
+            L.circle(latlng, {
+                radius: radius,
+                fillColor: 'red',
+                weight: 0,
+                fillOpacity: 0.8
+            }).addTo(map);
 
-        // blue, just one quarter, top right.
-        L.circle(latlng, {
-            radius: radius - 50,
-            startAngle : 0,
-            stopAngle : 90,
-            fillColor: 'blue',
-            weight: 0,
-            fillOpacity: 0.8
-        }).addTo(map);
+            L.circle(latlng, {
+                radius: radius,
+                startAngle : 90,
+                stopAngle : 250,
+                fillColor: 'white',
+                weight: 0,
+                fillOpacity: .8
+            }).addTo(map);
 
-        // white, almost the entire lower half filled.
-        L.circle(latlng, {
-            radius: radius - 15,
-            startAngle : 90,
-            stopAngle : 250,
-            fillColor: 'white',
-            weight: 0,
-            fillOpacity: .8
-        }).addTo(map);
+            L.circle(latlng, {
+                radius: radius,
+                startAngle : -45,
+                stopAngle : 45,
+                fillColor: 'white',
+                weight: 0,
+                fillOpacity: .8
+            }).addTo(map);
+        }
+
+        concentric([52, 3.99], 500);
+        concentric([52, 4.003], 300);
+        concentric([52.005, 4.01], 200);
+        concentric([51.995, 4.01], 100);
+        concentric([52, 4.01], 50);
 
     </script>
 </body>

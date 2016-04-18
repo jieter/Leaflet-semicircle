@@ -29,7 +29,7 @@
     // rotate point [x + r, y+r] around [x, y] by `angle` radians.
     function rotated (p, angle, r) {
         return p.add(
-            L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r).round()
+            L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r)
         );
     }
 
@@ -138,8 +138,6 @@
             ctx.lineTo(start.x, start.y);
             ctx.arc(p.x, p.y, r, layer.startAngle(), layer.stopAngle());
             ctx.lineTo(p.x, p.y);
-
-            // ctx.arc(p.x, p.y / s, r, 0, Math.PI * 2, false);
 
             if (s !== 1) {
                 ctx.restore();
