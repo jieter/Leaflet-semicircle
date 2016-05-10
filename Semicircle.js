@@ -156,4 +156,12 @@
             this._fillStroke(ctx, layer);
         }
     });
+
+    // L.CircleMarker inherits from L.Circle before the Semicircle stuff is
+    // added. The renderers test if the layer is a semicircle with a function
+    // isSemicircle, so add that to L.CircleMarker to make sure we can still
+    // make L.CircleMarkers.
+    L.CircleMarker = L.CircleMarker.extend({
+        isSemicircle: function () { return false; }
+    });
 });
