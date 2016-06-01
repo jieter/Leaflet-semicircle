@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet rangerings example</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
+    <style>
+    html {
+        height: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        vertical-align: baseline;
+    }
+    body { height: 100%; margin: 0; padding: 0;}
+    #map {
+         width: 100%; height: 100%;
+    }
+    </style>
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet-src.js"></script>
+    <script src="../Semicircle.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        var latlng = [50.6, -0.0];
+        var map = L.map('map').setView(latlng, 11);
+
+        function rangerings (latlng, options) {
+            options = L.extend({
+                count: 8,
+                interval: 1000,
+                direction: 0,
+                spread: 120
+            }, options);
+
+            var layer = L.featureGroup();
+            for (var i = 1; i <= options.count; i++) {
+                L.circle(latlng, {
+                    radius: i * options.interval,
+                    fill: false,
+                    color: '#000',
+                    weight: 1
+                }).setDirection(options.direction, options.spread).addTo(layer);
+            }
+            return layer;
+        }
+
+        rangerings(latlng).addTo(map);
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18
+        }).addTo(map);
+    </script>
+</body>
+</html>
