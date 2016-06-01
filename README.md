@@ -31,7 +31,8 @@ The plugin provides two ways to only display a part of the circle:
 
 Useing `options.startAngle` and `options.stopAngle`:
 ```
-L.circle([51.5, -0.09], 500, {
+L.circle([51.5, -0.09], {
+    radius: 500,
 	startAngle: 45,
 	stopAngle: 135
 }).addTo(map);
@@ -39,7 +40,7 @@ L.circle([51.5, -0.09], 500, {
 
 Draw the same semicircle using `setDirection(direction, size)`:
 ```
-L.circle([51.5, -0.09], 500)
+L.circle([51.5, -0.09], {radius: 500})
 	.setDirection(90, 90)
 	.addTo(map);
 ```

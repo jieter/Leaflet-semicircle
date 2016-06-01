@@ -29,7 +29,8 @@
 
         var radius = 500;
 
-        L.circle(latlng, radius, {
+        L.circle(latlng, {
+            radius: radius,
             fill: true,
             fillColor:'#a1ba03',
             fillOpacity: 0.5,
@@ -39,7 +40,8 @@
             stopAngle: 360
         }).addTo(map);
 
-        L.circle(latlng, radius, {
+        L.circle(latlng, {
+            radius: radius,
             fill: true,
             fillColor:'#fff',
             fillOpacity: 0.5,
