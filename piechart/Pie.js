@@ -133,7 +133,11 @@
                     color: this._color(i)
                 }, this.options.sliceOptions);
 
-                var slice = L.circle(this._latlng, options).addTo(this);
+                var slice = L.circle(
+                   this._latlng,
+                   this.options.radius, 
+                   L.Util.extend({}, options, this.options.pathOptions)
+                ).addTo(this);
 
                 if (this.options.labels) {
                     this._createLabel(normalized, this._data[i].label, slice);
