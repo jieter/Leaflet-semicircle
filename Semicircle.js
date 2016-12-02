@@ -92,12 +92,12 @@
         },
         _containsPoint: function (p) {
             function normalize (angle) {
-	            var newAngle = angle;
-	            while (newAngle <= -Math.PI)
-	                newAngle += 2.0 * Math.PI;
-	            while (newAngle > Math.PI)
-	                newAngle -= 2.0 * Math.PI;
-	            return newAngle;
+                var newAngle = angle;
+                while (newAngle <= -Math.PI)
+                    newAngle += 2.0 * Math.PI;
+                while (newAngle > Math.PI)
+                    newAngle -= 2.0 * Math.PI;
+                return newAngle;
             }
             var angle = Math.atan2(p.y - this._point.y, p.x - this._point.x);
             var nStart = normalize(this.startAngle());
