@@ -89,6 +89,25 @@
                 !(startAngle === 0 && stopAngle > 359) &&
                 !(startAngle == stopAngle)
             );
+        },
+        _containsPoint: function (p, min) {
+            function normalize(angle) {
+	        var newAngle = angle;
+	        while (newAngle <= -Math.PI)
+	            newAngle += 2.0 * Math.PI;
+	        while (newAngle > Math.PI)
+	            newAngle -= 2.0 * Math.PI;
+	        return newAngle;
+            }
+            var angle = Math.atan2(p.y - this._point.y, p.x - this._point.x);
+            var nStart = normalize(this.startAngle());
+            var nStop = normalize(this.stopAngle());
+            if (nStop <= nStart)
+                nStop += 2.0 * Math.PI;
+            if (angle <= nStart)
+                angle += 2.0 * Math.PI;
+            return nStart < angle && angle <= nStop &&
+                p.distanceTo(this._point) <= this._radius + this._clickTolerance();
         }
     });
 
