@@ -81,6 +81,13 @@
             maxZoom: 18,
             opacity: 0.5
         }).addTo(map);
+
+        // test for close-to-pole semicircles
+        L.circle([77, 0], {
+            radius: 50000,
+            startAngle: 45,
+            stopAngle: 360
+        }).addTo(map);
     </script>
     <style>
         .leaflet-div-icon {
