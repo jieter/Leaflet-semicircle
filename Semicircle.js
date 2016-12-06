@@ -92,20 +92,23 @@
         },
         _containsPoint: function (p) {
             function normalize (angle) {
-                var newAngle = angle;
-                while (newAngle <= -Math.PI)
-                    newAngle += 2.0 * Math.PI;
-                while (newAngle > Math.PI)
-                    newAngle -= 2.0 * Math.PI;
-                return newAngle;
+                while (angle <= -Math.PI) {
+                    angle += 2.0 * Math.PI;
+                }
+                while (angle > Math.PI) {
+                    angle -= 2.0 * Math.PI;
+                }
+                return angle;
             }
             var angle = Math.atan2(p.y - this._point.y, p.x - this._point.x);
             var nStart = normalize(this.startAngle());
             var nStop = normalize(this.stopAngle());
-            if (nStop <= nStart)
+            if (nStop <= nStart) {
                 nStop += 2.0 * Math.PI;
-            if (angle <= nStart)
+            }
+            if (angle <= nStart) {
                 angle += 2.0 * Math.PI;
+            }
             return nStart < angle && angle <= nStop &&
                 p.distanceTo(this._point) <= this._radius + this._clickTolerance();
         }
