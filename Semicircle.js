@@ -109,8 +109,10 @@
             if (angle <= nStart) {
                 angle += 2.0 * Math.PI;
             }
-            return nStart < angle && angle <= nStop &&
-                p.distanceTo(this._point) <= this._radius + this._clickTolerance();
+            return (
+                nStart < angle && angle <= nStop &&
+                p.distanceTo(this._point) <= this._radius + this._clickTolerance()
+            );
         }
     });
 
