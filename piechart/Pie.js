@@ -133,10 +133,13 @@
                     color: this._color(i)
                 }, this.options.sliceOptions);
 
-                var slice = L.circle(this._latlng, options).addTo(this);
+                this._data[i].slice = L.circle(
+                    this._latlng,
+                    L.Util.extend({}, options, this.options.pathOptions)
+                ).addTo(this);
 
                 if (this.options.labels) {
-                    this._createLabel(normalized, this._data[i].label, slice);
+                    this._createLabel(normalized, this._data[i].label, this._data[i].slice);
                 }
                 startAngle = stopAngle;
             }
