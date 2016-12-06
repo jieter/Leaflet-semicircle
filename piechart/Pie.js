@@ -134,9 +134,8 @@
                 }, this.options.sliceOptions);
 
                 this._data[i].slice = L.circle(
-                   this._latlng,
-                   this.options.radius, 
-                   L.Util.extend({}, options, this.options.pathOptions)
+                    this._latlng,
+                    L.Util.extend({}, options, this.options.pathOptions)
                 ).addTo(this);
 
                 if (this.options.labels) {
