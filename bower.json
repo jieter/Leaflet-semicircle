@@ -1,0 +1,29 @@
+{
+  "name": "leaflet-semicircle",
+  "version": "1.0.6",
+  "homepage": "https://github.com/jieter/Leaflet-semicircle",
+  "authors": [
+    "Jan Pieter Waagmeester <jieter@jieter.nl>"
+  ],
+  "description": "Display semicircles in Leaflet maps.",
+  "main": "Semicircle.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "Leaflet",
+    "semicircle",
+    "pie",
+    "diagram"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
