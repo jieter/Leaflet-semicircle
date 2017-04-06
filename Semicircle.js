@@ -37,7 +37,7 @@
         return rotated(this, angle, r);
     };
 
-    semicircle = {
+    var semicircle = {
         options: {
             startAngle: 0,
             stopAngle: 359.9999
