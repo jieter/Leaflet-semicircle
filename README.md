@@ -29,7 +29,7 @@ The plugin provides two ways to only display a part of the circle:
 ## Example:
 [Live demo](http://jieter.github.com/Leaflet-semicircle/examples/semicircle.html)
 
-Useing `options.startAngle` and `options.stopAngle`:
+Using `options.startAngle` and `options.stopAngle`:
 ```
 L.circle([51.5, -0.09], {
     radius: 500,
