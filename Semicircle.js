@@ -37,7 +37,7 @@
         return rotated(this, angle, r);
     };
 
-    L.Circle = L.Circle.extend({
+    var semicircle = {
         options: {
             startAngle: 0,
             stopAngle: 359.9999
@@ -114,7 +114,10 @@
                 p.distanceTo(this._point) <= this._radius + this._clickTolerance()
             );
         }
-    });
+    };
+
+    L.Circle = L.Circle.extend(semicircle);
+    L.CircleMarker = L.CircleMarker.extend(semicircle);
 
     var _updateCircleSVG = L.SVG.prototype._updateCircle;
     var _updateCircleCanvas = L.Canvas.prototype._updateCircle;
@@ -179,13 +182,5 @@
 
             this._fillStroke(ctx, layer);
         }
-    });
-
-    // L.CircleMarker inherits from L.Circle before the Semicircle stuff is
-    // added. The renderers test if the layer is a semicircle with a function
-    // isSemicircle, so add that to L.CircleMarker to make sure we can still
-    // make L.CircleMarkers.
-    L.CircleMarker = L.CircleMarker.extend({
-        isSemicircle: function () { return false; }
     });
 });
