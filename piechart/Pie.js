@@ -100,7 +100,7 @@
         setData: function (data) {
             this._prepareData(data);
 
-            return this.redraw();
+            return this;
         },
 
         // return the sum of the input data.
@@ -133,7 +133,7 @@
                     color: this._color(i)
                 }, this.options.sliceOptions);
 
-                this._data[i].slice = L.circle(
+                this._data[i].slice = L.semiCircle(
                     this._latlng,
                     L.Util.extend({}, options, this.options.pathOptions)
                 ).addTo(this);

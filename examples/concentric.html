@@ -3,7 +3,6 @@
 <head>
     <title>Leaflet Semicircle example</title>
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.2/leaflet.css" />
     <style>
         html {
             height: 100%;
@@ -18,7 +17,8 @@
         }
 
     </style>
-    <script src="http://cdn.leafletjs.com/leaflet/v1.0.2/leaflet-src.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
     <script src="../Semicircle.js"></script>
 </head>
 <body>
@@ -32,14 +32,14 @@
 
         function concentric (latlng, radius) {
             // red, should be a complete circle
-            L.circle(latlng, {
+            L.semiCircle(latlng, {
                 radius: radius,
                 fillColor: 'red',
                 weight: 0,
                 fillOpacity: 0.8
             }).addTo(map);
 
-            L.circle(latlng, {
+            L.semiCircle(latlng, {
                 radius: radius,
                 startAngle : 90,
                 stopAngle : 250,
@@ -48,7 +48,7 @@
                 fillOpacity: .8
             }).addTo(map);
 
-            L.circle(latlng, {
+            L.semiCircle(latlng, {
                 radius: radius,
                 startAngle : -45,
                 stopAngle : 45,

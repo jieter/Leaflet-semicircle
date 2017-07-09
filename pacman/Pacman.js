@@ -13,7 +13,7 @@ L.LatLng.prototype.translate = function (matrix, offset) {
     return this;
 };
 
-L.Pacman = L.Circle.extend({
+L.Pacman = L.SemiCircle.extend({
     options: {
         size: 400,
         moveOffset: 0.01

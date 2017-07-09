@@ -1,14 +1,33 @@
 Leaflet-Semicircle.
 -------------------
 
-Adds semicircle functionality to L.Circle. Angles are defined like compass courses: 0 = north, 90 = east, etc. If the script is not included, Leaflet will fall back drawing full circles.
+Allows drawing semicircles on leaflet maps.
 
-Updated for use with leaflet 1.0.2.
+It's an extension of Leaflet's [`L.Circle`](http://leafletjs.com/reference-1.1.0.html#circle),
+and behaves like `L.Circle` if the a semicircle of almost 360 degrees is displayed.
 
-## Provided methods ##
+Updated for use with leaflet 1.1.0.
+
+## Provided classes: ##
 <table>
 <tr>
-    <td><code>L.Circle.setStartAngle(angle)</code></td>
+    <td>
+        <code>L.SemiCircle</code>/
+        <code>L.SemiCircleMarker</code><br />
+        factories: <code>L.semiCircle</code>/<code>L.SemiCircleMarker</code>
+    </td>
+    <td>
+        Options:<br />
+        <code>startAngle</code>: start angle of the semicircle <br />
+        <code>stopAngle</code>: stop angle of the semicircle<br />
+        Angles are defined like compass courses: 0 = north, 90 = east, etc.
+    </td>
+</tr>
+
+## Provided methods: ##
+<table>
+<tr>
+    <td><code>L.SemiCircle.setStartAngle(angle)</code></td>
     <td>Set the start angle of the circle to <code>angle</code> and redraw.</td>
 </tr>
 <tr>
@@ -31,7 +50,7 @@ The plugin provides two ways to only display a part of the circle:
 
 Using `options.startAngle` and `options.stopAngle`:
 ```
-L.circle([51.5, -0.09], {
+L.semiCircle([51.5, -0.09], {
     radius: 500,
 	startAngle: 45,
 	stopAngle: 135
@@ -40,7 +59,7 @@ L.circle([51.5, -0.09], {
 
 Draw the same semicircle using `setDirection(direction, size)`:
 ```
-L.circle([51.5, -0.09], {radius: 500})
+L.semiCircle([51.5, -0.09], {radius: 500})
 	.setDirection(90, 90)
 	.addTo(map);
 ```
@@ -50,3 +69,9 @@ L.circle([51.5, -0.09], {radius: 500})
 [Live demo](http://jieter.github.com/Leaflet-semicircle/examples/semicircle.html)
 
 ![Semicircles screenshot](screenshot.png)
+
+## Changelog
+
+### 2.0.0 (2017-07-09)
+ - Changed the API to stand-alone classes rather than overwriting `L.Circle` with an extension of itself.
+ - Added support for Leaflet 1.1.0

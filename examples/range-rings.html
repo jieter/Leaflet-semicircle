@@ -3,7 +3,6 @@
 <head>
     <title>Leaflet rangerings example</title>
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.2/leaflet.css" />
     <style>
     html {
         height: 100%;
@@ -17,7 +16,8 @@
          width: 100%; height: 100%;
     }
     </style>
-    <script src="http://cdn.leafletjs.com/leaflet/v1.0.2/leaflet-src.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
     <script src="../Semicircle.js"></script>
 </head>
 <body>
@@ -37,7 +37,7 @@
 
             var layer = L.featureGroup();
             for (var i = 1; i <= options.count; i++) {
-                L.circle(latlng, {
+                L.semiCircle(latlng, {
                     radius: i * options.interval,
                     fill: false,
                     color: '#000',
