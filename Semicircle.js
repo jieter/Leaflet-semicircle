@@ -8,7 +8,7 @@
     if (typeof define === 'function' && define.amd) {
         // AMD
         define(['leaflet'], factory);
-    } else if (typeof module !== 'undefined') {
+    } else if (typeof module !== 'undefined' && typeof require !== 'undefined') {
         // Node/CommonJS
         module.exports = factory(require('leaflet'));
     } else {
@@ -140,7 +140,7 @@
                 return this._setPath(layer, 'M0 0');
             }
 
-            var p = layer._point,
+            var p = layer._map.latLngToLayerPoint(layer._latlng),
                 r = layer._radius,
                 r2 = Math.round(layer._radiusY || r),
                 start = p.rotated(layer.startAngle(), r),
