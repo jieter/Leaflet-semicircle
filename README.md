@@ -72,6 +72,9 @@ L.semiCircle([51.5, -0.09], {radius: 500})
 
 ## Changelog
 
+### 2.0.1 (2017-07-22)
+ - Fixed #14: Poleward displacement of circle center when radius is large.
+
 ### 2.0.0 (2017-07-09)
  - Changed the API to stand-alone classes rather than overwriting `L.Circle` with an extension of itself.
  - Added support for Leaflet 1.1.0
