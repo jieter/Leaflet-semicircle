@@ -72,6 +72,9 @@ L.semiCircle([51.5, -0.09], {radius: 500})
 
 ## Changelog
 
+### 2.0.2 (2017-09-01)
+ - Fixed #24: instance check for canvas renderer
+
 ### 2.0.1 (2017-07-22)
  - Fixed #14: Poleward displacement of circle center when radius is large.
 
