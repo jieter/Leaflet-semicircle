@@ -161,7 +161,8 @@
     L.Canvas.include({
         _updateCircle: function (layer) {
             // If we want a circle, we use the original function
-            if (!layer.isSemicircle()) {
+            if (!(layer instanceof L.SemiCircle || layer instanceof L.SemiCircleMarker) ||
+                !layer.isSemicircle()) {
                 return _updateCircleCanvas.call(this, layer);
             }
 
