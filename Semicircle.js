@@ -166,6 +166,8 @@
                 return _updateCircleCanvas.call(this, layer);
             }
 
+            if (!this._drawing || layer._empty()) { return; }
+
             var p = layer._point,
                 ctx = this._ctx,
                 r = layer._radius,
