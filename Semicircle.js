@@ -50,6 +50,7 @@
                 return fixAngle(this.options.stopAngle);
             }
         },
+
         stopAngle: function () {
             if (this.options.startAngle < this.options.stopAngle) {
                 return fixAngle(this.options.stopAngle);
@@ -87,7 +88,7 @@
 
             return (
                 !(startAngle === 0 && stopAngle > 359) &&
-                !(startAngle == stopAngle)
+                !(startAngle === stopAngle)
             );
         },
         _containsPoint: function (p) {

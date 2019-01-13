@@ -197,7 +197,7 @@
 
 L.pie = function (latlng, param, options) {
     var data = [];
-    if (typeof(param) == 'number') {
+    if (typeof(param) === 'number') {
         // for a single number, a percentage is assumed.
         param = param / 100;
         data.push(param);

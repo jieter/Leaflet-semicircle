@@ -78,13 +78,13 @@ L.Pacman = L.SemiCircle.extend({
     move: function (direction) {
         var offset = this.options.moveOffset * (this.pixelSize() / 1.6);
         this._position.translate(direction, offset);
-        if (direction[0] == 1) {
+        if (direction[0] === 1) {
             this._direction = 90;
-        } else if (direction[0] == -1) {
+        } else if (direction[0] === -1) {
             this._direction = 270;
-        } else if (direction[1] == 1) {
+        } else if (direction[1] === 1) {
             this._direction = 0;
-        } else if (direction[1] == -1) {
+        } else if (direction[1] === -1) {
             this._direction = 180;
         }
 
