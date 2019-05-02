@@ -175,8 +175,6 @@
                 s = (layer._radiusY || r) / r,
                 start = p.rotated(layer.startAngle(), r);
 
-            this._drawnLayers[layer._leaflet_id] = layer;
-
             if (s !== 1) {
                 ctx.save();
                 ctx.scale(1, s);
