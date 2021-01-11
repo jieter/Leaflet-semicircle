@@ -169,7 +169,7 @@
 
             if (!this._drawing || layer._empty()) { return; }
 
-            var p = layer._point,
+            var p = layer._map.latLngToLayerPoint(layer._latlng),
                 ctx = this._ctx,
                 r = layer._radius,
                 s = (layer._radiusY || r) / r,
