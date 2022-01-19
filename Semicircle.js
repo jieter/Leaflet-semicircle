@@ -143,7 +143,7 @@
 
             var p = layer._map.latLngToLayerPoint(layer._latlng),
                 r = layer._radius,
-                r2 = Math.round(layer._radiusY || r),
+                r2 = layer._radiusY || r,
                 start = p.rotated(layer.startAngle(), r),
                 end = p.rotated(layer.stopAngle(), r);
 
