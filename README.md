@@ -46,7 +46,7 @@ The plugin provides two ways to only display a part of the circle:
 2. Use `setDirection(direction, size)` to display a semicircle of `size` degrees at `direction`.
 
 ## Example:
-[Live demo](http://jieter.github.com/Leaflet-semicircle/examples/semicircle.html)
+[Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semicircle.html)
 
 Using `options.startAngle` and `options.stopAngle`:
 ```
@@ -66,7 +66,7 @@ L.semiCircle([51.5, -0.09], {radius: 500})
 
 ## Screenshot:
 
-[Live demo](http://jieter.github.com/Leaflet-semicircle/examples/semicircle.html)
+[Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semicircle.html)
 
 ![Semicircles screenshot](screenshot.png)
 
