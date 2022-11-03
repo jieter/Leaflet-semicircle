@@ -242,7 +242,7 @@
 
             if (!this._drawing || layer._empty()) { return; }
 
-            var p = layer._point,
+            var p = layer._map.latLngToLayerPoint(layer._latlng),
                 ctx = this._ctx,
                 r = layer._radius,
                 innerRadius = layer._innerRadius || 0,

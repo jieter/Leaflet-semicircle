@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/jieter/Leaflet-semicircle#readme",
   "devDependencies": {
-    "eslint": "^2.7.0",
-    "eslint-plugin-html": "^1.4.0",
-    "mversion": "^1.10.1"
+    "eslint": "^8.20.0",
+    "eslint-plugin-html": "^7.1.0",
+    "mversion": "^2.0.1"
   }
 }
