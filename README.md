@@ -88,7 +88,7 @@ L.semiCircle([51.5, -0.09], {
 ![Semicircles screenshot](screenshots/screenshot.png)
 
 ### Screenshot Using Rings
-[Live demo](../examples/semirings.html)
+[Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semirings.html)
 
 ![Semicircles screenshot](screenshots/rings.png)
 
