@@ -22,12 +22,12 @@
     var DEG_TO_RAD = Math.PI / 180;
 
     // make sure 0 degrees is up (North) and convert to radians.
-    function fixAngle(angle) {
+    function fixAngle (angle) {
         return (angle - 90) * DEG_TO_RAD;
     }
 
     // rotate point [x + r, y+r] around [x, y] by `angle` radians.
-    function rotated(p, angle, r) {
+    function rotated (p, angle, r) {
         return p.add(
             L.point(Math.cos(angle), Math.sin(angle)).multiplyBy(r)
         );
@@ -82,18 +82,19 @@
         getDirection: function () {
             return this.stopAngle() - (this.stopAngle() - this.startAngle()) / 2;
         },
-
         isSemicircle: function () {
             var startAngle = this.options.startAngle,
                 stopAngle = this.options.stopAngle;
-
             return (
                 !(startAngle === 0 && stopAngle > 359) &&
                 !(startAngle === stopAngle)
             );
         },
+        isRing: function () {
+            return !!this.options.innerRadius || !!this.options.ringWidth
+        },
         _containsPoint: function (p) {
-            function normalize(angle) {
+            function normalize (angle) {
                 while (angle <= -Math.PI) {
                     angle += 2.0 * Math.PI;
                 }
@@ -172,13 +173,17 @@
     var _updateCircleSVG = L.SVG.prototype._updateCircle;
     var _updateCircleCanvas = L.Canvas.prototype._updateCircle;
 
+    function useBaseCircleFunction (layer) {
+        return (!(layer instanceof L.SemiCircle || layer instanceof L.SemiCircleMarker) ||
+            (!layer.isSemicircle() && !layer.isRing()))
+    }
+
     L.SVG.include({
         _updateCircle: function (layer) {
 
-            var innerRadius = layer._innerRadius || 0
+
             // If we want a circle, we use the original function
-            if (!innerRadius && (!(layer instanceof L.SemiCircle || layer instanceof L.SemiCircleMarker) ||
-                !layer.isSemicircle())) {
+            if (useBaseCircleFunction(layer)) {
                 return _updateCircleSVG.call(this, layer);
             }
             if (layer._empty()) {
@@ -190,6 +195,7 @@
                 r2 = layer._radiusY || r,
                 start = p.rotated(layer.startAngle(), r),
                 end = p.rotated(layer.stopAngle(), r);
+            innerRadius = layer._innerRadius || 0
 
             var largeArc = (layer.options.stopAngle - layer.options.startAngle >= 180) ? '1' : '0';
 
@@ -207,13 +213,13 @@
                     d += ' z';
                 } else {
                     d = 'M ' + p.x + ' ' + p.y
-                    d += ' m ' + -layer._radius + " 0 "
-                    d += 'a ' + r + ' ' + r2 + ' 0 1 0 ' + layer._radius*2 + ' 0'
-                    d += 'a ' + r + ' ' + r2 + ' 0 1 0 ' + -layer._radius*2 + ' 0 z'
+                    d += ' m ' + -layer._radius + ' 0 '
+                    d += 'a ' + r + ' ' + r2 + ' 0 1 0 ' + layer._radius * 2 + ' 0'
+                    d += 'a ' + r + ' ' + r2 + ' 0 1 0 ' + -layer._radius * 2 + ' 0 z'
                     d += 'M ' + p.x + ' ' + p.y
-                    d += ' m ' + (- innerRadius) + " 0 "
-                    d += 'a ' + innerRadius + ' ' + innerRadius + ' 0 1 1 ' + innerRadius*2 + ' 0'
-                    d += 'a ' + innerRadius + ' ' + innerRadius + ' 0 1 1 ' + -innerRadius*2 + ' 0 z'
+                    d += ' m ' + (- innerRadius) + ' 0 '
+                    d += 'a ' + innerRadius + ' ' + innerRadius + ' 0 1 1 ' + innerRadius * 2 + ' 0'
+                    d += 'a ' + innerRadius + ' ' + innerRadius + ' 0 1 1 ' + -innerRadius * 2 + ' 0 z'
                 }
             } else {
                 d = 'M' + p.x + ',' + p.y +
@@ -230,8 +236,7 @@
     L.Canvas.include({
         _updateCircle: function (layer) {
             // If we want a circle, we use the original function
-            if (!(layer instanceof L.SemiCircle || layer instanceof L.SemiCircleMarker) ||
-                !layer.isSemicircle()) {
+            if (useBaseCircleFunction(layer)) {
                 return _updateCircleCanvas.call(this, layer);
             }
 
@@ -240,8 +245,19 @@
             var p = layer._point,
                 ctx = this._ctx,
                 r = layer._radius,
+                innerRadius = layer._innerRadius || 0,
                 s = (layer._radiusY || r) / r,
-                start = p.rotated(layer.startAngle(), r);
+                start = p.rotated(layer.startAngle(), r),
+                innerStart = p.rotated(layer.startAngle(), innerRadius),
+                innerStop = p.rotated(layer.stopAngle(), innerRadius),
+                startAngle = layer.startAngle(),
+                stopAngle = layer.stopAngle(),
+                isFullCircle = stopAngle - startAngle == 0
+
+
+            if (isFullCircle) {
+                stopAngle = startAngle + 2 * Math.PI
+            }
 
             if (s !== 1) {
                 ctx.save();
@@ -250,9 +266,22 @@
 
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
-            ctx.lineTo(start.x, start.y);
-            ctx.arc(p.x, p.y, r, layer.startAngle(), layer.stopAngle());
-            ctx.lineTo(p.x, p.y);
+            if (innerRadius > 0) {
+                ctx.moveTo(innerStart.x, innerStart.y)
+            }
+
+            if (isFullCircle)
+                ctx.moveTo(start.x, start.y)
+
+            ctx.arc(p.x, p.y, r, layer.startAngle(), stopAngle);
+            if (innerRadius > 0) {
+                if (isFullCircle)
+                    ctx.moveTo(innerStop.x, innerStop.y)
+                ctx.arc(p.x, p.y, innerRadius, stopAngle, layer.startAngle(), true);
+            }
+
+            if (innerRadius == 0)
+                ctx.lineTo(p.x, p.y);
 
             if (s !== 1) {
                 ctx.restore();
