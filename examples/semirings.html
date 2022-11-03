@@ -40,7 +40,7 @@
 
         var radius = 50000
 
-        function circle(latlng, options) {
+        function circle (latlng, options) {
             return L.semiCircle(latlng, L.extend({
                 radius: radius,
                 color: '#f03',
@@ -50,7 +50,7 @@
             }, options));
         }
 
-        function annotation(latlng, text) {
+        function annotation (latlng, text) {
             L.marker(latlng, {
                 icon: L.divIcon({
                     iconSize: [0, 0],
@@ -68,7 +68,7 @@
             for (var j = 1; j <= 12; j++) {
                 angle = j * 60;
                 circle([58 - (j * 2), i * 2], {
-                    innerRadius: radius / 15 * (j -1),
+                    innerRadius: radius / 15 * (j - 1),
                     startAngle: angle + 15 * i,
                     stopAngle: angle + 360 - (15 * i)
                 }).addTo(map);
@@ -77,27 +77,27 @@
 
         // yellow circles north/south
         for (var i = 0; i <= 80; i += 2) {
-            circle([i, -15], { color: '#ff0' }).addTo(map);
+            circle([i, -15], {color: '#ff0'}).addTo(map);
         }
 
         annotation([61.5, 0], 'Using <re>SetDirection(x, 20)</pre>:');
         annotation([63.5, 0], 'Canvas renderer:');
         // draw a row of 16 columns using setDirection
         for (var i = 0; i <= 16; i++) {
-            circle([60, i * 2], { color: '#03f', innerRadius: radius/2 }).setDirection(i * 30, 20).addTo(map);
-            circle([62, i * 2], { renderer: canvas, color: '#0ff', innerRadius: radius/2  }).setDirection(i * 30, 20).addTo(map);
+            circle([60, i * 2], {color: '#03f', innerRadius: radius / 2}).setDirection(i * 30, 20).addTo(map);
+            circle([62, i * 2], {renderer: canvas, color: '#0ff', innerRadius: radius / 2}).setDirection(i * 30, 20).addTo(map);
         }
 
         for (var i = 1; i <= 16; i++) {
             for (var j = 1; j <= 12; j++) {
                 angle = j * 60;
                 circle([58 - (j * 2), i * 2 + 32], {
-                    innerRadius: radius / 15 * (j -1),
+                    innerRadius: radius / 15 * (j - 1),
                     startAngle: angle + 15 * i,
                     stopAngle: angle + 360 - (15 * i),
                     renderer: canvas,
-                    fillColor: "#0000ff",
-                    color: "#0000ff",
+                    fillColor: '#0000ff',
+                    color: '#0000ff',
                 }).addTo(map);
             }
         }
@@ -110,7 +110,7 @@
 
         // test for close-to-pole semicircles
         L.semiCircle([77, 0], {
-            innerRadius: radius/2,
+            innerRadius: radius / 2,
             radius: radius,
             startAngle: 45,
             stopAngle: 360
