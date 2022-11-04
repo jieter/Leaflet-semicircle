@@ -116,18 +116,37 @@
                 nStart < angle && angle <= nStop &&
                 p.distanceTo(this._point) <= this._radius + this._clickTolerance()
             );
-        },
-        initialize: function (latlng, options, legacyOptions) {
+        }
+    }
+
+    function initialize (klass) {
+        return function (latlng, options, legacyOptions) {
             this._mInnerRadius = options.innerRadius || 0
             this._mRingWidth = options.ringWidth || 0
-            L.Circle.prototype.initialize.call(this, latlng, options, legacyOptions)
-        },
+            klass.prototype.initialize.call(this, latlng, options, legacyOptions)
+        }
+    }
+
+    function getInnerRadius (context) {
+        return ((context._mRingWidth) ? context._mRadius - context._mRingWidth : context._mInnerRadius) || 0
+    }
+
+    var markerOptions = {
+        initialize: initialize(L.CircleMarker),
+        _project: function () {
+            this._innerRadius = getInnerRadius(this)
+            L.CircleMarker.prototype._project.call(this)
+        }
+    }
+
+    var nonMarkerOptions = {
+        initialize: initialize(L.Circle),
         _project: function () {
             var lng = this._latlng.lng,
                 lat = this._latlng.lat,
                 map = this._map,
                 crs = map.options.crs,
-                innerRadius = (this._mRingWidth) ? this._mRadius - this._mRingWidth : this._mInnerRadius
+                innerRadius = getInnerRadius(this)
 
             if (innerRadius) {
                 if (crs.distance === L.CRS.Earth.distance) {
@@ -160,8 +179,8 @@
         }
     };
 
-    L.SemiCircle = L.Circle.extend(semicircle);
-    L.SemiCircleMarker = L.CircleMarker.extend(semicircle);
+    L.SemiCircle = L.Circle.extend(Object.assign({}, semicircle, nonMarkerOptions));
+    L.SemiCircleMarker = L.CircleMarker.extend(Object.assign({}, semicircle, markerOptions));
 
     L.semiCircle = function (latlng, options) {
         return new L.SemiCircle(latlng, options);
@@ -176,11 +195,10 @@
     function useBaseCircleFunction (layer) {
         return (!(layer instanceof L.SemiCircle || layer instanceof L.SemiCircleMarker) ||
             (!layer.isSemicircle() && !layer.isRing()))
-    }
+    };
 
     L.SVG.include({
         _updateCircle: function (layer) {
-
 
             // If we want a circle, we use the original function
             if (useBaseCircleFunction(layer)) {

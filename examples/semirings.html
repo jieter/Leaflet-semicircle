@@ -38,11 +38,13 @@
         var canvas = L.canvas();
         var svg = L.svg();
 
-        var radius = 50000
+        var defRadius = 50000
 
-        function circle (latlng, options) {
-            return L.semiCircle(latlng, L.extend({
-                radius: radius,
+
+        function circle (latlng, options, marker) {
+            var func = (marker) ? L.semiCircleMarker : L.semiCircle
+            return func(latlng, L.extend({
+                radius: defRadius,
                 color: '#f03',
                 opacity: 0.7,
                 renderer: svg,
@@ -59,21 +61,7 @@
             }).addTo(map);
         }
 
-        var angle;
 
-        annotation([58, -0.10], 'Using <pre>{startAngle: x, stopAngle: y}</pre>:');
-
-
-        for (var i = 1; i <= 16; i++) {
-            for (var j = 1; j <= 12; j++) {
-                angle = j * 60;
-                circle([58 - (j * 2), i * 2], {
-                    innerRadius: radius / 15 * (j - 1),
-                    startAngle: angle + 15 * i,
-                    stopAngle: angle + 360 - (15 * i)
-                }).addTo(map);
-            }
-        }
 
         // yellow circles north/south
         for (var i = 0; i <= 80; i += 2) {
@@ -84,23 +72,61 @@
         annotation([63.5, 0], 'Canvas renderer:');
         // draw a row of 16 columns using setDirection
         for (var i = 0; i <= 16; i++) {
-            circle([60, i * 2], {color: '#03f', innerRadius: radius / 2}).setDirection(i * 30, 20).addTo(map);
-            circle([62, i * 2], {renderer: canvas, color: '#0ff', innerRadius: radius / 2}).setDirection(i * 30, 20).addTo(map);
+            circle([60, i * 2], {color: '#03f', innerRadius: defRadius / 2}).setDirection(i * 30, 20).addTo(map);
+            circle([62, i * 2], {renderer: canvas, color: '#0ff', innerRadius: defRadius / 2}).setDirection(i * 30, 20).addTo(map);
         }
 
-        for (var i = 1; i <= 16; i++) {
-            for (var j = 1; j <= 12; j++) {
-                angle = j * 60;
-                circle([58 - (j * 2), i * 2 + 32], {
-                    innerRadius: radius / 15 * (j - 1),
-                    startAngle: angle + 15 * i,
-                    stopAngle: angle + 360 - (15 * i),
-                    renderer: canvas,
-                    fillColor: '#0000ff',
-                    color: '#0000ff',
-                }).addTo(map);
+        var angle;
+        var latlng = [58, 0]
+
+        function drawSemiGrid (latlng, options, marker) {
+            var radius = (options && options.radius) ? options.radius : defRadius
+            for (var i = 1; i <= 16; i++) {
+                for (var j = 1; j <= 12; j++) {
+                    angle = j * 60;
+                    var lat = latlng[0] - (j * 2)
+                    var lng = latlng[1] + i * 2
+                    circle([lat, lng], Object.assign({
+                        innerRadius: radius / 15 * (j - 1),
+                        startAngle: angle + 15 * i,
+                        stopAngle: angle + 360 - (15 * i)
+                    }, options), marker).addTo(map);
+                }
             }
         }
+
+        annotation(latlng, 'Using <pre>{startAngle: x, stopAngle: y}</pre>:');
+        drawSemiGrid(latlng)
+        latlng[1] += 33
+        annotation(latlng, 'Using canvas Renderer <pre>{startAngle: x, stopAngle: y}</pre>:');
+
+        drawSemiGrid(latlng, {
+            fillColor: '#0000ff',
+            color: '#0000ff',
+            renderer: canvas,
+        })
+
+
+        latlng = [32, 0]
+        var markerRadius = 10
+        annotation(latlng, 'Markers with SVG');
+        drawSemiGrid(latlng, {
+            radius: markerRadius,
+            fillColor: '#ff00ff',
+            color: '#ff00ff',
+        }, true)
+
+        latlng[1] += 33
+
+        annotation(latlng, 'Markers on Canvas');
+        drawSemiGrid(latlng, {
+            radius: markerRadius,
+            fillColor: '#00ffff',
+            color: '#00ffff',
+            renderer: canvas,
+        }, true)
+
+
 
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
