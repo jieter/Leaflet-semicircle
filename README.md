@@ -21,6 +21,9 @@ Updated for use with leaflet 1.1.0.
         <code>startAngle</code>: start angle of the semicircle <br />
         <code>stopAngle</code>: stop angle of the semicircle<br />
         Angles are defined like compass courses: 0 = north, 90 = east, etc.
+        <br />
+        <code>innerRadius</code>: defines an inner radius to display a ring instead of a circle <br />
+        <code>ringWidth</code>: set thickness of the ring, if set it overwrites the <code>innerRadius</code><br />
     </td>
 </tr>
 
@@ -43,13 +46,15 @@ Updated for use with leaflet 1.1.0.
 ## Usage:
 The plugin provides two ways to only display a part of the circle:
 1. Use the `options` map and set `startAngle` and `stopAngle`.
+3. Use the `options` the option `innerRadius` or `ringWidth` to draw a ring instead of a circle. 
 2. Use `setDirection(direction, size)` to display a semicircle of `size` degrees at `direction`.
+
 
 ## Example:
 [Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semicircle.html)
 
 Using `options.startAngle` and `options.stopAngle`:
-```
+```js
 L.semiCircle([51.5, -0.09], {
     radius: 500,
 	startAngle: 45,
@@ -58,17 +63,34 @@ L.semiCircle([51.5, -0.09], {
 ```
 
 Draw the same semicircle using `setDirection(direction, size)`:
-```
+```js
 L.semiCircle([51.5, -0.09], {radius: 500})
 	.setDirection(90, 90)
 	.addTo(map);
+```
+
+Draw the same semicircle using as a ring:
+```js
+L.semiCircle([51.5, -0.09], {
+    radius: 500,
+    innerRadius: 300,
+    //// same as:
+    // ringWidth: 200,
+	startAngle: 45,
+	stopAngle: 135
+}).addTo(map);
 ```
 
 ## Screenshot:
 
 [Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semicircle.html)
 
-![Semicircles screenshot](screenshot.png)
+![Semicircles screenshot](screenshots/screenshot.png)
+
+### Screenshot Using Rings
+[Live demo](http://jieter.github.io/Leaflet-semicircle/examples/semirings.html)
+
+![Semicircles screenshot](screenshots/rings.png)
 
 ## Changelog
 

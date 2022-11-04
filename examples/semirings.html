@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Leaflet Semicircle example</title>
+
+    <style>
+        html {
+            height: 100%;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            vertical-align: baseline;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
+    <script src="../Semicircle.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([55, 0], 4);
+
+        var canvas = L.canvas();
+        var svg = L.svg();
+
+        var defRadius = 50000
+
+
+        function circle (latlng, options, marker) {
+            var func = (marker) ? L.semiCircleMarker : L.semiCircle
+            return func(latlng, L.extend({
+                radius: defRadius,
+                color: '#f03',
+                opacity: 0.7,
+                renderer: svg,
+                weight: 2
+            }, options));
+        }
+
+        function annotation (latlng, text) {
+            L.marker(latlng, {
+                icon: L.divIcon({
+                    iconSize: [0, 0],
+                    html: text
+                })
+            }).addTo(map);
+        }
+
+
+
+        // yellow circles north/south
+        for (var i = 0; i <= 80; i += 2) {
+            circle([i, -15], {color: '#ff0'}).addTo(map);
+        }
+
+        annotation([61.5, 0], 'Using <re>SetDirection(x, 20)</pre>:');
+        annotation([63.5, 0], 'Canvas renderer:');
+        // draw a row of 16 columns using setDirection
+        for (var i = 0; i <= 16; i++) {
+            circle([60, i * 2], {color: '#03f', innerRadius: defRadius / 2}).setDirection(i * 30, 20).addTo(map);
+            circle([62, i * 2], {renderer: canvas, color: '#0ff', innerRadius: defRadius / 2}).setDirection(i * 30, 20).addTo(map);
+        }
+
+        var angle;
+        var latlng = [58, 0]
+
+        function drawSemiGrid (latlng, options, marker) {
+            var radius = (options && options.radius) ? options.radius : defRadius
+            for (var i = 1; i <= 16; i++) {
+                for (var j = 1; j <= 12; j++) {
+                    angle = j * 60;
+                    var lat = latlng[0] - (j * 2)
+                    var lng = latlng[1] + i * 2
+                    circle([lat, lng], Object.assign({
+                        innerRadius: radius / 15 * (j - 1),
+                        startAngle: angle + 15 * i,
+                        stopAngle: angle + 360 - (15 * i)
+                    }, options), marker).addTo(map);
+                }
+            }
+        }
+
+        annotation(latlng, 'Using <pre>{startAngle: x, stopAngle: y}</pre>:');
+        drawSemiGrid(latlng)
+        latlng[1] += 33
+        annotation(latlng, 'Using canvas Renderer <pre>{startAngle: x, stopAngle: y}</pre>:');
+
+        drawSemiGrid(latlng, {
+            fillColor: '#0000ff',
+            color: '#0000ff',
+            renderer: canvas,
+        })
+
+
+        latlng = [32, 0]
+        var markerRadius = 10
+        annotation(latlng, 'Markers with SVG');
+        drawSemiGrid(latlng, {
+            radius: markerRadius,
+            fillColor: '#ff00ff',
+            color: '#ff00ff',
+        }, true)
+
+        latlng[1] += 33
+
+        annotation(latlng, 'Markers on Canvas');
+        drawSemiGrid(latlng, {
+            radius: markerRadius,
+            fillColor: '#00ffff',
+            color: '#00ffff',
+            renderer: canvas,
+        }, true)
+
+
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18,
+            opacity: 0.5
+        }).addTo(map);
+
+        // test for close-to-pole semicircles
+        L.semiCircle([77, 0], {
+            innerRadius: radius / 2,
+            radius: radius,
+            startAngle: 45,
+            stopAngle: 360
+        }).addTo(map);
+    </script>
+    <style>
+        .leaflet-div-icon {
+            font-family: sans-serif;
+            background: transparent;
+            border: 0;
+            white-space: nowrap;
+        }
+
+        .leaflet-div-icon pre {
+            display: inline-block;
+        }
+    </style>
+</body>
+
+</html>
