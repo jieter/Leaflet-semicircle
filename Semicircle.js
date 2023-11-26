@@ -40,7 +40,8 @@
     var semicircle = {
         options: {
             startAngle: 0,
-            stopAngle: 359.9999
+            stopAngle: 359.9999,
+            arcOnly: false
         },
 
         startAngle: function () {
@@ -149,12 +150,18 @@
 
             var largeArc = (layer.options.stopAngle - layer.options.startAngle >= 180) ? '1' : '0';
 
-            var d = 'M' + p.x + ',' + p.y +
-                // line to first start point
-                'L' + start.x + ',' + start.y +
-                'A ' + r + ',' + r2 + ',0,' + largeArc + ',1,' + end.x + ',' + end.y +
-                ' z';
-
+            var d = '';
+            if(layer.options.arcOnly === false) {
+                d = 'M' + p.x + ',' + p.y +
+                    // line to first start point
+                    'L' + start.x + ',' + start.y +
+                    'A ' + r + ',' + r2 + ',0,' + largeArc + ',1,' + end.x + ',' + end.y +
+                    ' z';
+            } else {
+                // Option to create just the arc
+                d = 'M' + start.x + ',' + start.y +
+                    'A ' + r + ',' + r2 + ',0,' + largeArc + ',1,' + end.x + ',' + end.y;
+            }
             this._setPath(layer, d);
         }
     });
